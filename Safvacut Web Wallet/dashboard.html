@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Safvacut Wallet</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, onAuthStateChanged, updatePassword, updateProfile, reauthenticateWithCredential, EmailAuthProvider } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc, query, where, orderBy, limit, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBfsmmu-5uhLfFwSzUNGjXv4NkdSFc-fhQ",
+            authDomain: "safvacut-web-wallet-d2b32.firebaseapp.com",
+            projectId: "safvacut-web-wallet-d2b32",
+            storageBucket: "safvacut-web-wallet-d2b32.firebasestorage.app",
+            messagingSenderId: "207230694789",
+            appId: "1:207230694789:web:a3bf2c6c4cdecf5c3880ec",
+            measurementId: "G-LVELD1KTE8"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        // Make Firebase available globally
+        window.firebaseAuth = auth;
+        window.firebaseDb = db;
+        window.firebaseStorage = storage;
+        window.firestoreDoc = doc;
+        window.firestoreGetDoc = getDoc;
+        window.firestoreSetDoc = setDoc;
+        window.firestoreUpdateDoc = updateDoc;
+        window.firestoreCollection = collection;
+        window.firestoreAddDoc = addDoc;
+        window.firestoreQuery = query;
+        window.firestoreWhere = where;
+        window.firestoreOrderBy = orderBy;
+        window.firestoreLimit = limit;
+        window.firestoreGetDocs = getDocs;
+        window.onAuthStateChanged = onAuthStateChanged;
+        window.updatePassword = updatePassword;
+        window.updateProfile = updateProfile;
+        window.reauthenticateWithCredential = reauthenticateWithCredential;
+        window.EmailAuthProvider = EmailAuthProvider;
+        window.storageRef = ref;
+        window.uploadBytes = uploadBytes;
+        window.getDownloadURL = getDownloadURL;
+    </script>
+</head>
+<body class="dashboard-page">
+    <!-- Top Navigation -->
+    <nav class="dashboard-nav">
+        <div class="nav-left">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <i class="fas fa-shield-halved"></i>
+                </div>
+                <div class="logo-text">
+                    <span class="logo-name">SAFVACUT</span>
+                    <span class="version">v2.5.3</span>
+                </div>
+            </div>
+        </div>
+        <div class="nav-center">
+            <div class="wallet-id-display">
+                <span class="wallet-label">WALLET ID</span>
+                <span class="wallet-number" id="walletId">Loading...</span>
+                <button class="copy-wallet-id" onclick="copyWalletId()">
+                    <i class="fas fa-copy"></i>
+                </button>
+            </div>
+        </div>
+        <div class="nav-right">
+            <div class="nav-actions">
+                <button class="nav-btn" onclick="showNotifications()">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notificationCount">0</span>
+                </button>
+                <button class="nav-btn" onclick="showSettings()">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <div class="user-profile" onclick="showUserMenu()">
+                    <img src="/placeholder.svg?height=32&width=32" alt="Profile" id="userAvatar" class="user-avatar">
+                    <span id="userName">Loading...</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Dashboard -->
+    <main class="dashboard-main">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-menu">
+                <div class="menu-item active" data-section="overview" title="Overview">
+                    <i class="fas fa-home"></i>
+                </div>
+                <div class="menu-item" data-section="wallet" title="Wallet">
+                    <i class="fas fa-wallet"></i>
+                </div>
+                <div class="menu-item" data-section="transactions" title="Transactions">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <div class="menu-item" data-section="staking" title="Staking">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <div class="menu-item" data-section="profile" title="Profile">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="menu-item" data-section="settings" title="Settings">
+                    <i class="fas fa-cog"></i>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <div class="dashboard-content">
+            <!-- Overview Section -->
+            <section id="overview" class="content-section active">
+                <div class="section-header">
+                    <h2>Portfolio Overview</h2>
+                    <div class="header-actions">
+                        <button class="btn-secondary" onclick="refreshPortfolio()">
+                            <i class="fas fa-sync-alt"></i>
+                            Refresh
+                        </button>
+                        <button class="btn-primary" onclick="showConnectWallet()">
+                            <i class="fas fa-link"></i>
+                            Connect Wallet
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Main Balance Card -->
+                <div class="main-balance-card">
+                    <div class="balance-header">
+                        <div class="balance-title">
+                            <h2>Total Balance</h2>
+                        </div>
+                    </div>
+                    
+                    <div class="balance-amount">
+                        <span class="currency">$</span>
+                        <span class="amount" id="totalBalance">0.00</span>
+                    </div>
+                    
+                    <div class="balance-stats">
+                        <div class="stat-item">
+                            <div class="stat-header">
+                                <i class="stat-icon income fas fa-arrow-down"></i>
+                                <span class="stat-label">Daily Income</span>
+                            </div>
+                            <div class="stat-value" id="dailyIncome">$0.00</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-header">
+                                <i class="stat-icon expense fas fa-arrow-up"></i>
+                                <span class="stat-label">Daily Expense</span>
+                            </div>
+                            <div class="stat-value" id="dailyExpense">$0.00</div>
+                        </div>
+                    </div>
+                    
+                    <div class="balance-actions">
+                        <button class="action-btn receive-btn" onclick="showReceive()">
+                            <i class="fas fa-arrow-down"></i>
+                            Receive
+                        </button>
+                        <button class="action-btn send-btn" onclick="showSend()">
+                            <i class="fas fa-arrow-up"></i>
+                            Send
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Secondary Actions -->
+                <div class="secondary-actions">
+                    <button class="secondary-btn sell-btn" onclick="showSell()">
+                        <i class="fas fa-chart-line"></i>
+                        Sell
+                    </button>
+                    <button class="secondary-btn stake-btn" onclick="showStaking()">
+                        <i class="fas fa-coins"></i>
+                        Stake
+                    </button>
+                </div>
+
+                <!-- Crypto Assets -->
+                <div class="assets-section">
+                    <div class="section-title">
+                        <h3>Your Assets</h3>
+                        <button class="btn-text" onclick="showAllAssets()">View All</button>
+                    </div>
+                    <div class="assets-grid" id="assetsGrid">
+                        <!-- Assets will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Recent Activities -->
+                <div class="activities-section">
+                    <div class="section-title">
+                        <h3>Latest Activities</h3>
+                        <button class="btn-text" onclick="showAllActivities()">View All</button>
+                    </div>
+                    <div class="activities-list" id="activitiesList">
+                        <div class="no-activities">
+                            <i class="fas fa-inbox"></i>
+                            <p>No Record Found!</p>
+                            <span>Your transaction history will appear here</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Wallet Section -->
+            <section id="wallet" class="content-section">
+                <div class="section-header">
+                    <h2>Wallet Management</h2>
+                    <div class="header-actions">
+                        <button class="btn-secondary" onclick="showImportWallet()">
+                            <i class="fas fa-download"></i>
+                            Import Wallet
+                        </button>
+                        <button class="btn-primary" onclick="showCreateWallet()">
+                            <i class="fas fa-plus"></i>
+                            Create Wallet
+                        </button>
+                    </div>
+                </div>
+                <div class="wallet-grid">
+                    <div class="wallet-card">
+                        <div class="wallet-header">
+                            <h3>Connected Wallets</h3>
+                            <span class="wallet-count" id="walletCount">0</span>
+                        </div>
+                        <div class="wallet-list" id="walletList">
+                            <div class="no-wallets">
+                                <i class="fas fa-wallet"></i>
+                                <p>No wallets connected</p>
+                                <button class="btn-primary" onclick="showConnectWallet()">Connect Wallet</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Transactions Section -->
+            <section id="transactions" class="content-section">
+                <div class="section-header">
+                    <h2>Transaction History</h2>
+                    <div class="header-actions">
+                        <button class="btn-secondary" onclick="refreshTransactions()">
+                            <i class="fas fa-sync-alt"></i>
+                            Refresh
+                        </button>
+                    </div>
+                </div>
+                <div class="transactions-list" id="transactionsList">
+                    <div class="no-transactions">
+                        <i class="fas fa-receipt"></i>
+                        <p>No transactions found</p>
+                        <span>Your transaction history will appear here</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Staking Section -->
+            <section id="staking" class="content-section">
+                <div class="section-header">
+                    <h2>Staking Rewards</h2>
+                </div>
+                <div class="staking-info">
+                    <div class="info-card">
+                        <i class="fas fa-coins"></i>
+                        <h3>Staking Coming Soon</h3>
+                        <p>Earn rewards by staking your crypto assets. This feature will be available soon.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Profile Section -->
+            <section id="profile" class="content-section">
+                <div class="section-header">
+                    <h2>Account Details</h2>
+                    <div class="header-actions">
+                        <button class="btn-secondary" onclick="editProfile()">
+                            <i class="fas fa-edit"></i>
+                            Edit Profile
+                        </button>
+                    </div>
+                </div>
+                <div class="profile-grid">
+                    <div class="profile-card">
+                        <div class="profile-avatar">
+                            <img src="/placeholder.svg?height=100&width=100" alt="Profile" id="profileAvatar">
+                            <button class="avatar-edit" onclick="changeAvatar()">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                            <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="handleAvatarUpload(event)">
+                        </div>
+                        <div class="profile-info">
+                            <h3 id="profileName">Loading...</h3>
+                            <p id="profileEmail">Loading...</p>
+                            <div class="profile-stats">
+                                <div class="stat">
+                                    <span class="stat-label">Member Since</span>
+                                    <span class="stat-value" id="memberSince">Loading...</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-label">Total Transactions</span>
+                                    <span class="stat-value" id="totalTransactions">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="profile-details">
+                        <h4>Personal Information</h4>
+                        <div class="details-grid">
+                            <div class="detail-item">
+                                <label>Full Name</label>
+                                <span id="detailName">Loading...</span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Email Address</label>
+                                <span id="detailEmail">Loading...</span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Mobile Number</label>
+                                <span id="detailPhone">Not provided</span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Country</label>
+                                <span id="detailCountry">Not provided</span>
+                            </div>
+                            <div class="detail-item">
+                                <label>IP Address</label>
+                                <span id="detailIP">Loading...</span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Device</label>
+                                <span id="detailDevice">Loading...</span>
+                            </div>
+                            <div class="detail-item">
+                                <label>Registration Date</label>
+                                <span id="detailRegistration">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="content-section">
+                <div class="section-header">
+                    <h2>Settings</h2>
+                </div>
+                <div class="settings-grid">
+                    <div class="settings-card">
+                        <h3>Security Settings</h3>
+                        <div class="settings-list">
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Change Password</h4>
+                                    <p>Update your account password</p>
+                                </div>
+                                <button class="btn-secondary" onclick="showChangePassword()">
+                                    <i class="fas fa-key"></i>
+                                    Change
+                                </button>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Transaction PIN</h4>
+                                    <p>Set or change your transaction PIN</p>
+                                </div>
+                                <button class="btn-secondary" onclick="showChangePin()">
+                                    <i class="fas fa-lock"></i>
+                                    Set PIN
+                                </button>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Two-Factor Authentication</h4>
+                                    <p>Add an extra layer of security</p>
+                                </div>
+                                <button class="btn-secondary" onclick="show2FA()">
+                                    <i class="fas fa-shield-alt"></i>
+                                    Enable
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-card">
+                        <h3>Account Settings</h3>
+                        <div class="settings-list">
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Notifications</h4>
+                                    <p>Manage your notification preferences</p>
+                                </div>
+                                <button class="btn-secondary" onclick="showNotificationSettings()">
+                                    <i class="fas fa-bell"></i>
+                                    Manage
+                                </button>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Privacy Settings</h4>
+                                    <p>Control your privacy and data sharing</p>
+                                </div>
+                                <button class="btn-secondary" onclick="showPrivacySettings()">
+                                    <i class="fas fa-user-shield"></i>
+                                    Manage
+                                </button>
+                            </div>
+                            <div class="setting-item danger">
+                                <div class="setting-info">
+                                    <h4>Logout</h4>
+                                    <p>Sign out of your account</p>
+                                </div>
+                                <button class="btn-danger" onclick="confirmLogout()">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    Logout
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Modals -->
+    
+    <!-- Connect Wallet Modal -->
+    <div class="modal-overlay" id="connectWalletModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Connect Wallet</h3>
+                <button class="modal-close" onclick="closeModal('connectWalletModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <div class="wallet-options">
+                    <button class="wallet-option" onclick="connectMetaMask()">
+                        <img src="https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=40&h=40&fit=crop" alt="MetaMask">
+                        <div class="option-info">
+                            <h4>MetaMask</h4>
+                            <p>Connect using browser extension</p>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <button class="wallet-option" onclick="connectWalletConnect()">
+                        <img src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=40&h=40&fit=crop" alt="WalletConnect">
+                        <div class="option-info">
+                            <h4>WalletConnect</h4>
+                            <p>Connect using mobile wallet</p>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <button class="wallet-option" onclick="showImportMnemonic()">
+                        <img src="https://images.unsplash.com/photo-1518546305927-5a555bb7020d?w=40&h=40&fit=crop" alt="Import">
+                        <div class="option-info">
+                            <h4>Import Wallet</h4>
+                            <p>Import using mnemonic phrase</p>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Mnemonic Modal -->
+    <div class="modal-overlay" id="importMnemonicModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Import Wallet</h3>
+                <button class="modal-close" onclick="closeModal('importMnemonicModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <div class="mnemonic-form">
+                    <div class="security-notice">
+                        <i class="fas fa-shield-alt"></i>
+                        <p><strong>Note:</strong> Safvacut will not record your Mnemonic Phrase. You control the access and your assets.</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Enter Mnemonic Phrase</label>
+                        <textarea id="mnemonicPhrase" placeholder="Enter your 12 or 24 word mnemonic phrase separated by spaces" rows="4"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn-secondary" onclick="closeModal('importMnemonicModal')">Cancel</button>
+                        <button class="btn-primary" onclick="importWallet()">
+                            <i class="fas fa-download"></i>
+                            Import Wallet
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Send Crypto Modal -->
+    <div class="modal-overlay" id="sendModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Send Cryptocurrency</h3>
+                <button class="modal-close" onclick="closeModal('sendModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <form class="send-form" onsubmit="handleSendTransaction(event)">
+                    <div class="form-group">
+                        <label>Select Cryptocurrency</label>
+                        <select id="sendCrypto" onchange="updateSendCurrency()">
+                            <option value="BTC">Bitcoin (BTC)</option>
+                            <option value="ETH">Ethereum (ETH)</option>
+                            <option value="BNB">Binance Coin (BNB)</option>
+                            <option value="USDT">Tether (USDT)</option>
+                            <option value="TRX">TRON (TRX)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Recipient Address</label>
+                        <input type="text" id="recipientAddress" placeholder="Enter wallet address" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Amount</label>
+                        <div class="amount-input">
+                            <input type="number" id="sendAmount" placeholder="0.00" step="0.00000001" required>
+                            <span class="currency-label" id="sendCurrencyLabel">BTC</span>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="closeModal('sendModal')">Cancel</button>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                            Send
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Receive Modal -->
+    <div class="modal-overlay" id="receiveModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Receive Cryptocurrency</h3>
+                <button class="modal-close" onclick="closeModal('receiveModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <div class="receive-form">
+                    <div class="form-group">
+                        <label>Select Cryptocurrency</label>
+                        <select id="receiveCrypto" onchange="updateReceiveAddress()">
+                            <option value="BTC">Bitcoin (BTC)</option>
+                            <option value="ETH">Ethereum (ETH)</option>
+                            <option value="BNB">Binance Coin (BNB)</option>
+                            <option value="USDT">Tether (USDT)</option>
+                            <option value="TRX">TRON (TRX)</option>
+                        </select>
+                    </div>
+                    <div class="qr-section">
+                        <div class="qr-code" id="qrCode">
+                            <i class="fas fa-qrcode"></i>
+                        </div>
+                        <div class="address-section">
+                            <label>Your Wallet Address</label>
+                            <div class="address-input">
+                                <input type="text" id="walletAddress" readonly>
+                                <button class="copy-btn" onclick="copyAddress()">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="receive-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Only send <span id="selectedCrypto">Bitcoin</span> to this address. Sending other cryptocurrencies may result in permanent loss.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div class="modal-overlay" id="editProfileModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Edit Profile</h3>
+                <button class="modal-close" onclick="closeModal('editProfileModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <form class="profile-form" onsubmit="saveProfile(event)">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="editDisplayName" placeholder="Enter your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" id="editPhoneNumber" placeholder="Enter your phone number">
+                    </div>
+                    <div class="form-group">
+                        <label>Country</label>
+                        <select id="editCountry">
+                            <option value="">Select Country</option>
+                            <option value="US">United States</option>
+                            <option value="UK">United Kingdom</option>
+                            <option value="CA">Canada</option>
+                            <option value="AU">Australia</option>
+                            <option value="DE">Germany</option>
+                            <option value="FR">France</option>
+                            <option value="JP">Japan</option>
+                            <option value="CN">China</option>
+                            <option value="IN">India</option>
+                            <option value="BR">Brazil</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="closeModal('editProfileModal')">Cancel</button>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i>
+                            Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div class="modal-overlay" id="changePasswordModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Change Password</h3>
+                <button class="modal-close" onclick="closeModal('changePasswordModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <form class="password-form" onsubmit="changePassword(event)">
+                    <div class="form-group">
+                        <label>Current Password</label>
+                        <input type="password" id="currentPassword" placeholder="Enter current password" required>
+                    </div>
+                    <div class="form-group">
+                        <label>New Password</label>
+                        <input type="password" id="newPassword" placeholder="Enter new password" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm New Password</label>
+                        <input type="password" id="confirmNewPassword" placeholder="Confirm new password" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="closeModal('changePasswordModal')">Cancel</button>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-key"></i>
+                            Change Password
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change PIN Modal -->
+    <div class="modal-overlay" id="changePinModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Set Transaction PIN</h3>
+                <button class="modal-close" onclick="closeModal('changePinModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <form class="pin-form" onsubmit="changePin(event)">
+                    <div class="form-group">
+                        <label>New 6-Digit PIN</label>
+                        <input type="password" id="newPin" placeholder="Enter 6-digit PIN" maxlength="6" pattern="[0-9]{6}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm PIN</label>
+                        <input type="password" id="confirmPin" placeholder="Confirm PIN" maxlength="6" pattern="[0-9]{6}" required>
+                    </div>
+                    <div class="security-notice">
+                        <i class="fas fa-info-circle"></i>
+                        <p>This PIN will be required for all transactions to ensure security.</p>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="closeModal('changePinModal')">Cancel</button>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-lock"></i>
+                            Set PIN
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifications Modal -->
+    <div class="modal-overlay" id="notificationsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Notifications</h3>
+                <button class="modal-close" onclick="closeModal('notificationsModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <div class="notifications-list" id="notificationsList">
+                    <div class="no-notifications">
+                        <i class="fas fa-bell-slash"></i>
+                        <p>No notifications</p>
+                        <span>You're all caught up!</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Settings Modal -->
+    <div class="modal-overlay" id="notificationSettingsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Notification Settings</h3>
+                <button class="modal-close" onclick="closeModal('notificationSettingsModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <form class="notification-settings-form" onsubmit="saveNotificationSettings(event)">
+                    <div class="settings-group">
+                        <h4>Email Notifications</h4>
+                        <div class="setting-toggle">
+                            <label class="toggle-label">
+                                <input type="checkbox" id="emailNotifications" checked>
+                                <span class="toggle-slider"></span>
+                                Transaction alerts via email
+                            </label>
+                        </div>
+                        <div class="setting-toggle">
+                            <label class="toggle-label">
+                                <input type="checkbox" id="priceAlerts" checked>
+                                <span class="toggle-slider"></span>
+                                Price change alerts
+                            </label>
+                        </div>
+                    </div>
+                    <div class="settings-group">
+                        <h4>Security Notifications</h4>
+                        <div class="setting-toggle">
+                            <label class="toggle-label">
+                                <input type="checkbox" id="loginAlerts" checked>
+                                <span class="toggle-slider"></span>
+                                Login alerts
+                            </label>
+                        </div>
+                        <div class="setting-toggle">
+                            <label class="toggle-label">
+                                <input type="checkbox" id="securityAlerts" checked>
+                                <span class="toggle-slider"></span>
+                                Security alerts
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="closeModal('notificationSettingsModal')">Cancel</button>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i>
+                            Save Settings
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
