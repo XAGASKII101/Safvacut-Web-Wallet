@@ -837,7 +837,7 @@
 
     <div class="auth-card animate-slide-up">
       <div class="auth-header">
-        <img src="/Public/mainl-logo.png" alt="Safvacut Logo" class="auth-logo">
+        <img src="mainl-logo.png" alt="Safvacut Logo" class="auth-logo">
         <style>
           .auth-logo {
             width: 100px;
