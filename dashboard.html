@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 
 <head>
   <meta charset="UTF-8">
@@ -1056,11 +1056,20 @@
 </head>
 
 <body class="dark dark-theme">
-  <!-- Mobile Menu Overlay -->
-  <div id="mobile-overlay" class="mobile-menu-overlay"></div>
+  <!-- Backdrop (click to close sidebar on mobile) -->
+  <div id="backdrop" class="fixed inset-0 bg-black bg-opacity-40 z-30 hidden sm:hidden"></div>
+
+  <!-- Mobile Toggle Button -->
+  <button id="menuToggle" class="fixed top-4 left-4 z-50 sm:hidden bg-rgb(84 84 84) p-2 rounded-full shadow">
+    <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+    </svg>
+  </button>
 
   <!-- Sidebar -->
-  <aside id="sidebar" class="sidebar glass-effect">
+  <aside id="sidebar"
+    class="sidebar glass-effect fixed top-0 left-0 z-40 w-64 h-full bg-rgb(84 84 84) transform -translate-x-full sm:translate-x-0 transition-transform duration-300 ease-in-out">
+    <!-- Sidebar content goes here -->
     <div class="p-4 sm:p-6 h-full flex flex-col">
       <!-- Logo -->
       <div class="flex items-center space-x-3 mb-6 sm:mb-8">
@@ -1132,8 +1141,7 @@
       <div class="mt-auto">
         <div class="glass-effect rounded-xl p-3 sm:p-4 user-profile-mobile">
           <div class="flex items-center space-x-3">
-            <img id="user-avatar" src="/mainl-logo.png"
-              class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex-shrink-0">
+            <img id="user-avatar" src="/mainl-logo.png" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex-shrink-0">
             <div class="flex-1 min-w-0">
               <p id="user-name" class="text-xs sm:text-sm font-medium truncate">Loading...</p>
               <p id="user-email" class="text-xs text-gray-400 truncate">Loading...</p>
@@ -1151,6 +1159,24 @@
       </div>
     </div>
   </aside>
+
+  <!-- Script -->
+  <script>
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const backdrop = document.getElementById('backdrop');
+
+    menuToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('-translate-x-full');
+      backdrop.classList.toggle('hidden');
+    });
+
+    backdrop.addEventListener('click', () => {
+      sidebar.classList.add('-translate-x-full');
+      backdrop.classList.add('hidden');
+    });
+  </script>
+
 
   <!-- Main Content -->
   <main id="main-content" class="main-content min-h-screen">
@@ -1208,6 +1234,7 @@
             </div>
           </div>
         </div>
+      </div>
     </header>
 
     <!-- Dashboard Content -->
@@ -1396,9 +1423,10 @@
             </div>
             <div>
               <label for="amount" class="block text-sm font-medium mb-2">Amount</label>
-              <input type="number" id="amount" class="w-full p-3 glass-effect rounded-lg border border-gray-600 
-              class=" w-full p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500
-                focus:outline-none calculator-font text-sm sm:text-base" placeholder="0.00">
+              <input type="number" id="amount"
+                class="w-full p-3 glass-effect rounded-lg border border-gray-600               class=" w-full p-3
+                glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none
+                calculator-font text-sm sm:text-base" placeholder="0.00">
             </div>
             <div>
               <label for="price" class="block text-sm font-medium mb-2">Price</label>
@@ -1602,13 +1630,13 @@
           <label for="send-address" class="block text-sm font-medium mb-2">Recipient Address</label>
           <input type="text" id="send-address"
             class="w-full p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none text-sm sm:text-base"
-            placeholder="Enter wallet address">
+            placeholder="Enter wallet address" required>
         </div>
         <div>
           <label for="send-amount" class="block text-sm font-medium mb-2">Amount</label>
           <input type="number" id="send-amount"
             class="w-full p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none calculator-font text-sm sm:text-base"
-            placeholder="0.00">
+            placeholder="0.00" required>
         </div>
         <div class="flex flex-col sm:flex-row gap-3">
           <button type="button"
@@ -1851,7 +1879,6 @@
       { symbol: 'SOL', name: 'Solana', balance: 25.1234, price: 98.76, change: 8.45, iconClass: 'crypto-icon-solana' },
       { symbol: 'DOGE', name: 'Dogecoin', balance: 5000.00, price: 0.08, change: -3.21, iconClass: 'crypto-icon-doge' }
     ];
-
     const mockTransactions = [
       { type: 'receive', asset: 'BTC', amount: 0.1234, value: 5580.45, status: 'completed', time: '2 hours ago', hash: '0x1a2b3c...' },
       { type: 'send', asset: 'ETH', amount: 2.5, value: 7085.30, status: 'completed', time: '5 hours ago', hash: '0x4d5e6f...' },
@@ -1859,7 +1886,6 @@
       { type: 'swap', asset: 'USDT', amount: 500.0, value: 500.00, status: 'completed', time: '2 days ago', hash: '0xjklmno...' },
       { type: 'stake', asset: 'SOL', amount: 15.0, value: 1481.40, status: 'completed', time: '3 days ago', hash: '0xpqrstu...' }
     ];
-
     const mockPortfolioAssets = [
       { symbol: 'BTC', name: 'Bitcoin', balance: 0.5234, value: 23680.45, allocation: 44.8, change: 2.34, iconClass: 'crypto-icon-bitcoin' },
       { symbol: 'ETH', name: 'Ethereum', balance: 12.8456, value: 36380.12, allocation: 27.5, change: -1.23, iconClass: 'crypto-icon-ethereum' },
@@ -1868,7 +1894,6 @@
       { symbol: 'SOL', name: 'Solana', balance: 25.1234, price: 98.76, value: 2481.40, allocation: 4.7, change: 8.45, iconClass: 'crypto-icon-solana' },
       { symbol: 'DOGE', name: 'Dogecoin', balance: 5000.00, price: 0.08, value: 400.00, allocation: 0.8, change: -3.21, iconClass: 'crypto-icon-doge' }
     ];
-
     const mockOrderBook = [
       { price: 45235.0, amount: 0.05, type: "buy" },
       { price: 45234.8, amount: 0.12, type: "buy" },
@@ -1881,7 +1906,6 @@
       { price: 45235.8, amount: 0.18, type: "sell" },
       { price: 45236.0, amount: 0.04, type: "sell" },
     ];
-
     const mockRecentTrades = [
       { time: "10:30:05", price: 45234.8, amount: 0.05, type: "buy" },
       { time: "10:30:02", price: 45235.1, amount: 0.1, type: "sell" },
@@ -1889,7 +1913,6 @@
       { time: "10:29:55", price: 45235.0, amount: 0.12, type: "sell" },
       { time: "10:29:50", price: 45234.7, amount: 0.03, type: "buy" },
     ];
-
     const mockStakingOptions = [
       {
         asset: "Ethereum (ETH)",
@@ -1934,11 +1957,9 @@
       try {
         const storedUser = localStorage.getItem('safvacut_user');
         const authTime = localStorage.getItem('safvacut_auth_time');
-
         if (storedUser && authTime) {
           const userData = JSON.parse(storedUser);
           const timeDiff = Date.now() - parseInt(authTime);
-
           if (timeDiff < 3600000) { // Data less than 1 hour old
             currentUser = userData;
             userProfile = userData;
@@ -1953,7 +1974,6 @@
             currentUser = user;
             const userDocRef = doc(db, "users", user.uid);
             const userDocSnap = await getDoc(userDocRef);
-
             if (userDocSnap.exists()) {
               userProfile = userDocSnap.data();
             } else {
@@ -1965,7 +1985,6 @@
                 uid: user.uid
               };
             }
-
             localStorage.setItem('safvacut_user', JSON.stringify(userProfile));
             localStorage.setItem('safvacut_auth_time', Date.now().toString());
             updateUIWithUserData(userProfile);
@@ -1985,7 +2004,6 @@
       const userName = userData.displayName || userData.email.split('@')[0];
       const userEmail = userData.email;
       const userAvatar = userData.photoURL || `/placeholder.svg?height=40&width=40&query=${(userData.displayName || userData.email).charAt(0).toUpperCase()}`;
-
       document.getElementById('user-name').textContent = userName;
       document.getElementById('user-email').textContent = userEmail;
       document.getElementById('header-user-name').textContent = userName;
@@ -2009,7 +2027,6 @@
           const value = asset.balance * asset.price;
           const changeClass = asset.change >= 0 ? 'price-up' : 'price-down';
           const changeIcon = asset.change >= 0 ? '↗' : '↘';
-
           assetsList.innerHTML += `
             <div class="crypto-item flex items-center justify-between p-3 sm:p-4 glass-effect rounded-xl crypto-card">
               <div class="flex items-center space-x-3">
@@ -2036,7 +2053,6 @@
           const statusClass = `status-${tx.status}`;
           const typeIcon = getTransactionIcon(tx.type);
           const typeColor = getTransactionColor(tx.type);
-
           transactionsList.innerHTML += `
             <div class="transaction-item flex items-center justify-between p-3 sm:p-4 glass-effect rounded-xl">
               <div class="flex items-center space-x-3">
@@ -2062,7 +2078,6 @@
         mockAssets.slice(0, 4).forEach(asset => {
           const changeClass = asset.change >= 0 ? 'price-up' : 'price-down';
           const changeIcon = asset.change >= 0 ? '↗' : '↘';
-
           marketOverview.innerHTML += `
             <div class="glass-effect rounded-xl p-3 sm:p-4 crypto-card">
               <div class="flex items-center space-x-3 mb-3">
@@ -2086,7 +2101,6 @@
       const balanceChangePercentage = (balanceChange / (totalBalance - balanceChange)) * 100;
 
       document.getElementById('total-balance').textContent = totalBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
       const balanceChangeElement = document.getElementById('balance-change');
       if (balanceChangeElement) {
         balanceChangeElement.textContent = `${balanceChange >= 0 ? '+' : '-'}$${Math.abs(balanceChange).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (${balanceChangePercentage.toFixed(2)}%)`;
@@ -2102,7 +2116,6 @@
         mockPortfolioAssets.forEach(asset => {
           const changeClass = asset.change >= 0 ? 'price-up' : 'price-down';
           const changeIcon = asset.change >= 0 ? '↗' : '↘';
-
           portfolioAssetsList.innerHTML += `
             <div class="flex items-center justify-between p-3 sm:p-4 glass-effect rounded-xl crypto-card">
               <div class="flex items-center space-x-3">
@@ -2179,7 +2192,6 @@
           const statusClass = `status-${tx.status}`;
           const typeIcon = getTransactionIcon(tx.type);
           const typeColor = getTransactionColor(tx.type);
-
           transactionHistory.innerHTML += `
             <div class="transaction-item flex items-center justify-between p-3 sm:p-4 glass-effect rounded-xl">
               <div class="flex items-center space-x-3">
@@ -2241,7 +2253,6 @@
         profileSettingsForm.addEventListener('submit', async (e) => {
           e.preventDefault();
           const displayName = document.getElementById('settings-name').value;
-
           try {
             if (currentUser) {
               await firebaseUpdateProfile(currentUser, { displayName });
@@ -2372,6 +2383,7 @@
       }
 
       sendAssetSelect.addEventListener('change', updateSendModalImage);
+
       // Initialize with default image
       updateSendModalImage();
     }
@@ -2405,13 +2417,11 @@
       }
 
       receiveAsset.addEventListener('change', updateReceiveAddress);
-
       copyAddressBtn.addEventListener('click', () => {
         navigator.clipboard.writeText(receiveAddress.textContent).then(() => {
           showToast('Address copied to clipboard!', 'success');
         });
       });
-
       shareAddressBtn.addEventListener('click', () => {
         if (navigator.share) {
           navigator.share({
@@ -2436,7 +2446,6 @@
         if (portfolioChartInstance) {
           portfolioChartInstance.destroy(); // Destroy existing chart instance
         }
-
         portfolioChartInstance = new Chart(ctx, {
           type: 'line',
           data: {
@@ -2483,7 +2492,6 @@
       const assetFilter = document.getElementById('transaction-asset-filter').value;
       const dateFilter = document.getElementById('transaction-date-filter').value;
       const transactionHistory = document.getElementById('transaction-history');
-
       if (!transactionHistory) return;
 
       transactionHistory.innerHTML = ''; // Clear current list
@@ -2492,7 +2500,6 @@
         const matchesType = typeFilter === 'All Types' || tx.type === typeFilter.toLowerCase();
         const matchesAsset = assetFilter === 'All Assets' || tx.asset === assetFilter;
         const matchesDate = !dateFilter || tx.time.startsWith(dateFilter); // Simple date match
-
         return matchesType && matchesAsset && matchesDate;
       });
 
@@ -2505,7 +2512,6 @@
         const statusClass = `status-${tx.status}`;
         const typeIcon = getTransactionIcon(tx.type);
         const typeColor = getTransactionColor(tx.type);
-
         transactionHistory.innerHTML += `
           <div class="transaction-item flex items-center justify-between p-3 sm:p-4 glass-effect rounded-xl">
             <div class="flex items-center space-x-3">
@@ -2607,7 +2613,6 @@
     // Initialize dashboard when DOM is loaded
     document.addEventListener('DOMContentLoaded', () => {
       initializeDashboard();
-
       // Load saved theme
       const savedTheme = localStorage.getItem('theme');
       if (savedTheme === 'light') {
