@@ -44,6 +44,8 @@
             'bounce-in': 'bounceIn 0.6s ease-out',
             'shimmer': 'shimmer 2s linear infinite',
             'gradient': 'gradient 3s ease infinite',
+            'slide-right': 'slideRight 0.3s ease-out',
+            'nav-bounce': 'navBounce 0.4s ease-out',
           },
           keyframes: {
             float: {
@@ -62,6 +64,10 @@
               'from': { transform: 'translateY(100%)', opacity: '0' },
               'to': { transform: 'translateY(0)', opacity: '1' }
             },
+            slideRight: {
+              'from': { transform: 'translateX(-100%)', opacity: '0' },
+              'to': { transform: 'translateX(0)', opacity: '1' }
+            },
             fadeIn: {
               'from': { opacity: '0' },
               'to': { opacity: '1' }
@@ -72,6 +78,11 @@
               '70%': { transform: 'scale(0.9)' },
               '100%': { transform: 'scale(1)', opacity: '1' }
             },
+            navBounce: {
+              '0%': { transform: 'scale(0.8)', opacity: '0' },
+              '50%': { transform: 'scale(1.1)' },
+              '100%': { transform: 'scale(1)', opacity: '1' }
+            },
             shimmer: {
               '0%': { backgroundPosition: '-200% 0' },
               '100%': { backgroundPosition: '200% 0' }
@@ -80,6 +91,10 @@
               '0%, 100%': { backgroundPosition: '0% 50%' },
               '50%': { backgroundPosition: '100% 50%' }
             }
+          },
+          fontFamily: {
+            'calculator': ['Orbitron', 'monospace'],
+            'balance': ['Orbitron', 'monospace'],
           }
         }
       }
@@ -251,22 +266,365 @@
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 0 20px rgba(247, 147, 30, 0.15);
     }
 
+    /* Enhanced Responsive Sidebar Styles */
     .sidebar {
-      transition: transform 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      width: 280px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
     }
 
-    .sidebar-collapsed {
-      transform: translateX(-100%);
-    }
-
+    /* Desktop styles */
     @media (min-width: 1024px) {
-      .sidebar-collapsed {
-        transform: translateX(-240px);
+      .sidebar {
+        position: fixed;
+        transform: translateX(0);
+        height: 100vh;
+        left: 0;
+        top: 0;
+        z-index: 40;
+      }
+
+      .main-content {
+        margin-left: 280px;
+        transition: margin-left 0.4s ease;
+      }
+
+      .mobile-menu-btn {
+        display: none;
       }
     }
 
-    .mobile-menu-overlay {
+    /* Mobile and Tablet Responsive Styles */
+    @media (max-width: 1023px) {
+      .sidebar {
+        position: fixed;
+        transform: translateX(-100%);
+        width: 100%;
+        max-width: 320px;
+        height: 100vh;
+        z-index: 50;
+        left: 0;
+        top: 0;
+        box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+      }
+
+      .sidebar.sidebar-open {
+        transform: translateX(0);
+        animation: slideRight 0.3s ease-out;
+      }
+
+      .main-content {
+        margin-left: 0;
+        padding-bottom: 20px;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+    }
+
+    /* Mobile Specific Optimizations */
+    @media (max-width: 768px) {
+
+      /* Header adjustments */
+      .header-glass {
+        padding: 0.75rem 1rem !important;
+        height: auto !important;
+      }
+
+      .header-glass .h-14 {
+        height: 3.5rem !important;
+      }
+
+      /* Main content padding */
+      .section-content {
+        padding: 1rem !important;
+      }
+
+      /* Balance card mobile optimization */
+      .balance-card {
+        padding: 1.5rem !important;
+        margin-bottom: 1.5rem !important;
+      }
+
+      .balance-amount {
+        font-size: 2rem !important;
+        line-height: 1.2 !important;
+      }
+
+      /* Action buttons grid */
+      .action-buttons {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1rem !important;
+      }
+
+      .action-buttons button {
+        padding: 1rem !important;
+        min-height: 80px !important;
+      }
+
+      .action-buttons button svg {
+        width: 1.5rem !important;
+        height: 1.5rem !important;
+        margin-bottom: 0.5rem !important;
+      }
+
+      .action-buttons button span {
+        font-size: 0.875rem !important;
+        font-weight: 600 !important;
+      }
+
+      /* Portfolio grid mobile */
+      .portfolio-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem !important;
+      }
+
+      /* Stats grid mobile */
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1rem !important;
+      }
+
+      .stats-grid>div {
+        padding: 1.5rem 1rem !important;
+        text-align: center !important;
+      }
+
+      .stats-grid .text-2xl {
+        font-size: 1.5rem !important;
+      }
+
+      /* Trading grid mobile */
+      .trading-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem !important;
+      }
+
+      /* Crypto items mobile */
+      .crypto-item {
+        padding: 1rem !important;
+        border-radius: 1rem !important;
+      }
+
+      .crypto-icon {
+        width: 2.5rem !important;
+        height: 2.5rem !important;
+        flex-shrink: 0 !important;
+      }
+
+      .crypto-text {
+        font-size: 0.875rem !important;
+      }
+
+      .crypto-price {
+        font-size: 0.875rem !important;
+      }
+
+      /* Transaction items mobile */
+      .transaction-item {
+        padding: 1rem !important;
+        border-radius: 1rem !important;
+      }
+
+      .transaction-item .w-10 {
+        width: 2.5rem !important;
+        height: 2.5rem !important;
+      }
+
+      /* Chart container mobile */
+      .chart-container {
+        height: 200px !important;
+        margin-top: 1rem !important;
+      }
+
+      /* Modal mobile optimization */
+      .modal-content {
+        margin: 1rem !important;
+        padding: 1.5rem !important;
+        max-height: calc(100vh - 2rem) !important;
+        width: calc(100% - 2rem) !important;
+        border-radius: 1rem !important;
+      }
+
+      /* Form inputs mobile */
+      input,
+      select,
+      textarea {
+        font-size: 16px !important;
+        /* Prevents zoom on iOS */
+        padding: 1rem !important;
+        border-radius: 0.75rem !important;
+      }
+
+      /* Button improvements mobile */
+      .btn-primary {
+        padding: 1rem !important;
+        font-size: 1rem !important;
+        min-height: 48px !important;
+        border-radius: 0.75rem !important;
+      }
+
+      /* Navigation improvements mobile */
+      .nav-item {
+        padding: 1rem !important;
+        margin: 0.25rem 0 !important;
+        border-radius: 0.75rem !important;
+        min-height: 48px !important;
+      }
+
+      .nav-item span {
+        font-size: 1rem !important;
+      }
+
+      /* User profile mobile */
+      .user-profile-mobile {
+        padding: 1rem !important;
+      }
+
+      /* Market overview mobile */
+      #market-overview {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1rem !important;
+      }
+
+      /* Typography mobile */
+      h1 {
+        font-size: 1.5rem !important;
+      }
+
+      h2 {
+        font-size: 1.25rem !important;
+      }
+
+      h3 {
+        font-size: 1.125rem !important;
+      }
+
+      /* Sidebar mobile specific */
+      .sidebar {
+        padding: 0 !important;
+      }
+
+      .sidebar>div {
+        padding: 1.5rem 1rem !important;
+      }
+
+      .logo {
+        font-size: 1.25rem !important;
+      }
+
+      .logo img {
+        width: 35px !important;
+        height: 35px !important;
+      }
+    }
+
+    /* Small Mobile Devices (iPhone SE, etc.) */
+    @media (max-width: 480px) {
+
+      /* Even more compact layout */
+      .section-content {
+        padding: 0.75rem !important;
+      }
+
+      .balance-card {
+        padding: 1rem !important;
+      }
+
+      .balance-amount {
+        font-size: 1.75rem !important;
+      }
+
+      .action-buttons button {
+        padding: 0.75rem !important;
+        min-height: 70px !important;
+      }
+
+      .action-buttons button svg {
+        width: 1.25rem !important;
+        height: 1.25rem !important;
+      }
+
+      .action-buttons button span {
+        font-size: 0.75rem !important;
+      }
+
+      .crypto-item {
+        padding: 0.75rem !important;
+      }
+
+      .crypto-icon {
+        width: 2rem !important;
+        height: 2rem !important;
+      }
+
+      .stats-grid>div {
+        padding: 1rem !important;
+      }
+
+      .stats-grid .text-2xl {
+        font-size: 1.25rem !important;
+      }
+
+      .modal-content {
+        margin: 0.5rem !important;
+        padding: 1rem !important;
+      }
+
+      .chart-container {
+        height: 150px !important;
+      }
+
+      /* Ultra compact navigation */
+      .nav-item {
+        padding: 0.75rem !important;
+      }
+
+      .nav-item span {
+        font-size: 0.875rem !important;
+      }
+
+      .sidebar>div {
+        padding: 1rem !important;
+      }
+    }
+
+    /* Enhanced Mobile Menu Button */
+    .mobile-menu-btn {
+      display: none;
+      position: relative;
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(247, 147, 30, 0.1);
+      border: 1px solid rgba(247, 147, 30, 0.2);
+      color: #f7931e;
       transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      min-width: 44px;
+      min-height: 44px;
+    }
+
+    .mobile-menu-btn:hover {
+      background: rgba(247, 147, 30, 0.2);
+      border-color: rgba(247, 147, 30, 0.4);
+      transform: scale(1.05);
+    }
+
+    .mobile-menu-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* Enhanced Mobile Menu Overlay */
+    .mobile-menu-overlay {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      z-index: 40;
+      opacity: 0;
+      visibility: hidden;
     }
 
     .mobile-menu-overlay.active {
@@ -274,37 +632,119 @@
       visibility: visible;
     }
 
-    .mobile-menu-overlay:not(.active) {
-      opacity: 0;
-      visibility: hidden;
+    /* Enhanced Navigation Items */
+    .nav-item {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      border-radius: 12px;
+      margin: 2px 0;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
     }
 
+    .nav-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(247, 147, 30, 0.1), transparent);
+      transition: left 0.5s;
+    }
+
+    .nav-item:hover::before {
+      left: 100%;
+    }
+
+    .nav-item:hover {
+      background: rgba(247, 147, 30, 0.1);
+      transform: translateX(4px);
+      border-left: 3px solid #f7931e;
+      padding-left: 9px;
+    }
+
+    .nav-item.active {
+      background: linear-gradient(135deg, rgba(247, 147, 30, 0.2) 0%, rgba(255, 107, 53, 0.1) 100%);
+      color: #f7931e;
+      border-left: 3px solid #f7931e;
+      padding-left: 9px;
+      box-shadow: 0 4px 12px rgba(247, 147, 30, 0.2);
+    }
+
+    .nav-item.active svg {
+      filter: drop-shadow(0 2px 4px rgba(247, 147, 30, 0.3));
+    }
+
+    /* Enhanced Logo */
+    .logo {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #f7931e;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transition: all 0.3s ease;
+      padding: 8px;
+      border-radius: 12px;
+    }
+
+    .logo:hover {
+      transform: scale(1.05);
+      background: rgba(247, 147, 30, 0.1);
+    }
+
+    .logo img {
+      height: 40px;
+      width: 40px;
+      object-fit: contain;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      filter: drop-shadow(0 0 10px rgba(247, 147, 30, 0.3));
+    }
+
+    .logo img:hover {
+      filter: drop-shadow(0 0 15px rgba(247, 147, 30, 0.5));
+      transform: rotate(5deg);
+    }
+
+    /* Enhanced Header */
+    .header-glass {
+      backdrop-filter: blur(25px);
+      border-bottom: 1px solid rgba(247, 147, 30, 0.2);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .dark .header-glass {
+      background: rgba(15, 15, 35, 0.9);
+    }
+
+    .light .header-glass {
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    /* Notification dot animation */
     .notification-dot {
       position: absolute;
       top: -2px;
       right: -2px;
       width: 8px;
       height: 8px;
-      background: #ef4444;
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
       border-radius: 50%;
       animation: pulse 2s infinite;
+      box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
     }
 
+    /* Loading and transition states */
     .loading-skeleton {
       background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
       background-size: 200% 100%;
       animation: shimmer 2s infinite;
-    }
-
-    .chart-container {
-      position: relative;
-      height: 300px;
-    }
-
-    @media (max-width: 768px) {
-      .chart-container {
-        height: 200px;
-      }
     }
 
     .modal {
@@ -405,50 +845,6 @@
       background: linear-gradient(135deg, #c2a633 0%, #d4af37 100%);
     }
 
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 30;
-      display: none;
-    }
-
-    .dark .bottom-nav {
-      background: rgba(15, 15, 35, 0.95);
-      border-top: 1px solid rgba(247, 147, 30, 0.2);
-    }
-
-    .light .bottom-nav {
-      background: rgba(255, 255, 255, 0.95);
-      border-top: 1px solid rgba(247, 147, 30, 0.2);
-    }
-
-    @media (max-width: 1024px) {
-      .bottom-nav {
-        display: flex;
-      }
-
-      .main-content {
-        padding-bottom: 80px;
-      }
-    }
-
-    .nav-item {
-      transition: all 0.3s ease;
-    }
-
-    .nav-item:hover {
-      background: rgba(247, 147, 30, 0.1);
-      border-radius: 12px;
-    }
-
-    .nav-item.active {
-      background: rgba(247, 147, 30, 0.2);
-      border-radius: 12px;
-      color: #f7931e;
-    }
-
     .transaction-item {
       transition: all 0.3s ease;
     }
@@ -508,57 +904,6 @@
       }
     }
 
-    /* Responsive adjustments for phone mode */
-    @media (max-width: 1023px) {
-
-      /* Apply to screens smaller than large (lg) breakpoint */
-      .sidebar {
-        transform: translateX(-100%);
-        /* Ensure sidebar is collapsed by default on mobile */
-      }
-
-      .main-content {
-        margin-left: 0;
-        /* No margin from sidebar on mobile */
-      }
-    }
-
-    @media (max-width: 640px) {
-      .balance-card h2 {
-        font-size: 1.75rem !important;
-      }
-
-      .welcome-header h1 {
-        font-size: 1.25rem !important;
-      }
-
-      .action-buttons {
-        flex-direction: column !important;
-        gap: 0.75rem !important;
-      }
-
-      .action-buttons button {
-        width: 100% !important;
-      }
-
-      .crypto-item {
-        padding: 0.75rem !important;
-      }
-
-      .crypto-icon {
-        width: 2rem !important;
-        height: 2rem !important;
-      }
-
-      .crypto-text {
-        font-size: 0.875rem !important;
-      }
-
-      .crypto-price {
-        font-size: 0.875rem !important;
-      }
-    }
-
     /* Touch-friendly buttons for mobile */
     @media (hover: none) and (pointer: coarse) {
       .crypto-card:hover {
@@ -573,6 +918,11 @@
       .nav-item {
         min-height: 44px;
         min-width: 44px;
+      }
+
+      .nav-item:hover {
+        transform: none;
+        background: rgba(247, 147, 30, 0.1);
       }
     }
 
@@ -591,127 +941,205 @@
       scroll-behavior: smooth;
     }
 
-    /* Enhanced Logo */
-    .logo {
-      font-family: 'Orbitron', monospace;
-      font-size: 1.5rem;
+    /* Custom scrollbar for sidebar */
+    .sidebar::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .sidebar::-webkit-scrollbar-track {
+      background: rgba(247, 147, 30, 0.1);
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+      background: rgba(247, 147, 30, 0.5);
+      border-radius: 2px;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb:hover {
+      background: rgba(247, 147, 30, 0.7);
+    }
+
+    /* Balance and Calculator Fonts */
+    .balance-amount {
+      font-family: 'Orbitron', monospace !important;
       font-weight: 700;
-      color: var(--primary-color);
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      transition: var(--transition);
     }
 
-    .logo:hover {
-      transform: scale(1.05);
+    .calculator-font {
+      font-family: 'Orbitron', monospace !important;
     }
 
-    .logo img {
-      height: 40px;
-      width: 40px;
-      object-fit: contain;
-      border-radius: 8px;
-      transition: var(--transition);
-      filter: drop-shadow(0 0 10px rgba(247, 147, 30, 0.3));
+    /* Landscape mobile adjustments */
+    @media (max-width: 768px) and (orientation: landscape) {
+      .balance-card {
+        padding: 1rem !important;
+      }
+
+      .balance-amount {
+        font-size: 1.5rem !important;
+      }
+
+      .action-buttons {
+        grid-template-columns: repeat(4, 1fr) !important;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(4, 1fr) !important;
+      }
+
+      .chart-container {
+        height: 120px !important;
+      }
     }
 
-    .logo img:hover {
-      filter: drop-shadow(0 0 15px rgba(247, 147, 30, 0.5));
-      transform: rotate(5deg);
+    /* Safe area adjustments for notched devices */
+    @supports (padding: max(0px)) {
+      .sidebar {
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(1rem, env(safe-area-inset-right));
+      }
+
+      .header-glass {
+        padding-top: max(0.5rem, env(safe-area-inset-top));
+      }
+
+      .main-content {
+        padding-bottom: max(1rem, env(safe-area-inset-bottom));
+      }
     }
 
-    .logo i {
-      font-size: 2rem;
-      animation: rotate 10s linear infinite;
+    /* Mobile-specific improvements for better UX */
+    @media (max-width: 768px) {
+
+      /* Prevent horizontal scroll */
+      body {
+        overflow-x: hidden;
+      }
+
+      /* Better touch targets */
+      .action-buttons button,
+      .nav-item,
+      .btn-primary {
+        -webkit-tap-highlight-color: rgba(247, 147, 30, 0.2);
+      }
+
+      /* Improved modal behavior on mobile */
+      .modal {
+        padding: 0.5rem;
+      }
+
+      /* Better form spacing on mobile */
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      /* Improved card spacing */
+      .glass-effect {
+        margin-bottom: 1rem;
+      }
+
+      /* Better button spacing */
+      .flex.gap-3 {
+        gap: 1rem !important;
+      }
+
+      /* Improved text readability */
+      .text-xs {
+        font-size: 0.875rem !important;
+      }
+
+      .text-sm {
+        font-size: 1rem !important;
+      }
     }
   </style>
 </head>
 
 <body class="dark dark-theme">
   <!-- Mobile Menu Overlay -->
-  <div id="mobile-overlay" class="mobile-menu-overlay fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"></div>
+  <div id="mobile-overlay" class="mobile-menu-overlay"></div>
 
   <!-- Sidebar -->
-  <aside id="sidebar"
-    class="sidebar fixed top-0 left-0 h-full w-64 glass-effect z-50 lg:translate-x-0 sidebar-collapsed">
-    <div class="p-6">
+  <aside id="sidebar" class="sidebar glass-effect">
+    <div class="p-4 sm:p-6 h-full flex flex-col">
       <!-- Logo -->
-      <div class="flex items-center space-x-3 mb-8">
+      <div class="flex items-center space-x-3 mb-6 sm:mb-8">
         <a href="index.html" class="logo">
-          <img src="mainl-logo.png" alt="Safvacut Logo" id="logoImg" />
-          <span>SAFVACUT</span>
+          <img src="/Public/mainl-logo.png" alt="Safvacut Logo" id="logoImg" />
+          <span class="hidden sm:inline">SAFVACUT</span>
         </a>
       </div>
+
       <!-- Navigation -->
-      <nav class="space-y-2">
+      <nav class="space-y-1 sm:space-y-2 flex-1">
         <a href="#dashboard" class="nav-item active flex items-center space-x-3 p-3 rounded-lg transition-all"
           data-section="dashboard">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2v0"></path>
           </svg>
-          <span>Dashboard</span>
+          <span class="text-sm sm:text-base">Dashboard</span>
         </a>
         <a href="#portfolio" class="nav-item flex items-center space-x-3 p-3 rounded-lg transition-all"
           data-section="portfolio">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
             </path>
           </svg>
-          <span>Portfolio</span>
+          <span class="text-sm sm:text-base">Portfolio</span>
         </a>
         <a href="#trading" class="nav-item flex items-center space-x-3 p-3 rounded-lg transition-all"
           data-section="trading">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6">
             </path>
           </svg>
-          <span>Trading</span>
+          <span class="text-sm sm:text-base">Trading</span>
         </a>
         <a href="#transactions" class="nav-item flex items-center space-x-3 p-3 rounded-lg transition-all"
           data-section="transactions">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
           </svg>
-          <span>Transactions</span>
+          <span class="text-sm sm:text-base">Transactions</span>
           <div class="notification-dot"></div>
         </a>
         <a href="#staking" class="nav-item flex items-center space-x-3 p-3 rounded-lg transition-all"
           data-section="staking">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1">
             </path>
           </svg>
-          <span>Staking</span>
+          <span class="text-sm sm:text-base">Staking</span>
         </a>
         <a href="#settings" class="nav-item flex items-center space-x-3 p-3 rounded-lg transition-all"
           data-section="settings">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
             </path>
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z">
             </path>
           </svg>
-          <span>Settings</span>
+          <span class="text-sm sm:text-base">Settings</span>
         </a>
       </nav>
+
       <!-- User Profile -->
-      <div class="absolute bottom-6 left-6 right-6">
-        <div class="glass-effect rounded-xl p-4">
+      <div class="mt-auto">
+        <div class="glass-effect rounded-xl p-3 sm:p-4 user-profile-mobile">
           <div class="flex items-center space-x-3">
-            <img id="user-avatar" src="/placeholder.svg?height=40&width=40" alt="User Avatar"
-              class="w-10 h-10 rounded-full">
+            <img id="user-avatar" src="/Public/mainl-logo.png"
+              class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex-shrink-0">
             <div class="flex-1 min-w-0">
-              <p id="user-name" class="text-sm font-medium truncate">Loading...</p>
+              <p id="user-name" class="text-xs sm:text-sm font-medium truncate">Loading...</p>
               <p id="user-email" class="text-xs text-gray-400 truncate">Loading...</p>
             </div>
-            <button id="logout-btn" class="p-2 rounded-lg hover:bg-red-500 hover:bg-opacity-20 transition-all"
+            <button id="logout-btn"
+              class="p-2 rounded-lg hover:bg-red-500 hover:bg-opacity-20 transition-all flex-shrink-0"
               aria-label="Logout">
               <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -725,48 +1153,53 @@
   </aside>
 
   <!-- Main Content -->
-  <main id="main-content" class="main-content lg:ml-64 min-h-screen">
+  <main id="main-content" class="main-content min-h-screen">
     <!-- Header -->
-    <header class="glass-effect border-b border-orange-500 border-opacity-20 sticky top-0 z-30">
-      <div class="px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16">
-          <!-- Welcome Message (Clickable on Mobile) -->
-          <div class="welcome-header flex-1 lg:flex-none lg:cursor-default cursor-pointer" id="mobile-header-toggle"
-            aria-label="Toggle sidebar">
-            <h1 class="text-xl font-semibold">Welcome back, <span id="header-user-name"
-                class="gradient-text">User</span>!</h1>
-            <p class="text-sm text-gray-400 hidden sm:block">Manage your crypto portfolio with confidence</p>
-          </div>
+    <header class="header-glass sticky top-0 z-30">
+      <div class="px-3 sm:px-4 lg:px-8">
+        <div class="flex items-center justify-between h-14 sm:h-16">
+          <!-- Mobile Menu Button -->
+          <button id="mobile-menu-btn" class="mobile-menu-btn lg:hidden" aria-label="Toggle sidebar">
+            <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+
           <!-- Header Actions -->
-          <div class="flex items-center space-x-4">
+          <div class="flex items-center space-x-2 sm:space-x-4 ml-auto">
             <!-- Theme Toggle -->
             <button id="theme-toggle" class="p-2 rounded-lg hover:bg-orange-500 hover:bg-opacity-20 transition-all"
               aria-label="Toggle theme">
-              <svg id="theme-icon-dark" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg id="theme-icon-dark" class="w-4 h-4 sm:w-5 sm:h-5 hidden" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
               </svg>
-              <svg id="theme-icon-light" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg id="theme-icon-light" class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
                 </path>
               </svg>
             </button>
+
             <!-- Notifications -->
             <button class="p-2 rounded-lg hover:bg-orange-500 hover:bg-opacity-20 transition-all relative"
               aria-label="View notifications">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M15 17h5l-5 5v-5zM10.07 2.82a3 3 0 00-4.24 0L2.82 5.83a3 3 0 000 4.24L5.83 13.1a3 3 0 004.24 0l3.01-3.01a3 3 0 000-4.24L10.07 2.82z">
                 </path>
               </svg>
               <div class="notification-dot"></div>
             </button>
+
             <!-- Quick Actions -->
             <div class="hidden sm:flex items-center space-x-2">
-              <button onclick="showReceiveModal()"
-                class="btn-primary px-4 py-2 rounded-lg text-white font-medium text-sm">
-                <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <button onclick="showSendModal()"
+                class="btn-primary px-3 sm:px-4 py-2 rounded-lg text-white font-medium text-xs sm:text-sm">
+                <svg class="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 inline" fill="none" stroke="currentColor"
+                  viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8l-8-8-8 8">
                   </path>
                 </svg>
@@ -775,193 +1208,212 @@
             </div>
           </div>
         </div>
-      </div>
     </header>
 
     <!-- Dashboard Content -->
-    <div id="dashboard-section" class="section-content p-4 sm:p-6 lg:p-8">
+    <div id="dashboard-section" class="section-content p-3 sm:p-4 lg:p-8">
       <!-- Balance Card -->
-      <div class="balance-card glass-effect rounded-3xl p-6 sm:p-8 mb-8 crypto-glow">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-          <div>
-            <h2 class="text-3xl sm:text-4xl font-bold orbitron mb-2">
+      <div class="balance-card glass-effect rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8 crypto-glow">
+        <div class="flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6">
+          <div class="flex-1">
+            <!-- Welcome Message -->
+            <div class="mb-3 sm:mb-4">
+              <h1 class="text-lg sm:text-xl font-semibold">Welcome back, <span id="header-user-name"
+                  class="gradient-text">User</span>!</h1>
+              <p class="text-xs sm:text-sm text-gray-400">Manage your crypto portfolio with confidence</p>
+            </div>
+            <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold balance-amount mb-2">
               $<span id="total-balance">0.00</span>
             </h2>
-            <p class="text-gray-400">Total Portfolio Value</p>
+            <p class="text-gray-400 text-sm sm:text-base">Total Portfolio Value</p>
             <div class="flex items-center mt-2">
-              <span id="balance-change" class="text-sm font-medium price-up">+$1,234.56 (+2.34%)</span>
+              <span id="balance-change" class="text-xs sm:text-sm font-medium price-up">+$1,234.56 (+2.34%)</span>
               <span class="text-xs text-gray-500 ml-2">24h</span>
             </div>
           </div>
-          <div class="mt-4 sm:mt-0 w-full sm:w-1/2 lg:w-1/3">
+          <div class="w-full sm:w-1/2 lg:w-1/3">
             <div class="chart-container">
               <canvas id="portfolio-chart"></canvas>
             </div>
           </div>
         </div>
+
         <!-- Quick Actions -->
-        <div class="action-buttons grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="action-buttons grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
           <button onclick="showSendModal()"
-            class="flex flex-col items-center p-4 glass-effect rounded-xl hover:bg-orange-500 hover:bg-opacity-20 transition-all">
-            <svg class="w-6 h-6 mb-2 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            class="flex flex-col items-center p-3 sm:p-4 glass-effect rounded-xl hover:bg-orange-500 hover:bg-opacity-20 transition-all">
+            <svg class="w-5 h-5 sm:w-6 sm:h-6 mb-2 text-orange-500" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
             </svg>
-            <span class="text-sm font-medium">Send</span>
+            <span class="text-xs sm:text-sm font-medium">Send</span>
           </button>
           <button onclick="showReceiveModal()"
-            class="flex flex-col items-center p-4 glass-effect rounded-xl hover:bg-orange-500 hover:bg-opacity-20 transition-all">
-            <svg class="w-6 h-6 mb-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            class="flex flex-col items-center p-3 sm:p-4 glass-effect rounded-xl hover:bg-green-500 hover:bg-opacity-20 transition-all">
+            <svg class="w-5 h-5 sm:w-6 sm:h-6 mb-2 text-green-500" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8l-8-8-8 8"></path>
             </svg>
-            <span class="text-sm font-medium">Receive</span>
+            <span class="text-xs sm:text-sm font-medium">Receive</span>
           </button>
           <button onclick="showBuyModal()"
-            class="flex flex-col items-center p-4 glass-effect rounded-xl hover:bg-orange-500 hover:bg-opacity-20 transition-all">
-            <svg class="w-6 h-6 mb-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            class="flex flex-col items-center p-3 sm:p-4 glass-effect rounded-xl hover:bg-blue-500 hover:bg-opacity-20 transition-all">
+            <svg class="w-5 h-5 sm:w-6 sm:h-6 mb-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
             </svg>
-            <span class="text-sm font-medium">Buy</span>
+            <span class="text-xs sm:text-sm font-medium">Buy</span>
           </button>
           <button onclick="showSwapModal()"
-            class="flex flex-col items-center p-4 glass-effect rounded-xl hover:bg-orange-500 hover:bg-opacity-20 transition-all">
-            <svg class="w-6 h-6 mb-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            class="flex flex-col items-center p-3 sm:p-4 glass-effect rounded-xl hover:bg-purple-500 hover:bg-opacity-20 transition-all">
+            <svg class="w-5 h-5 sm:w-6 sm:h-6 mb-2 text-purple-500" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
             </svg>
-            <span class="text-sm font-medium">Swap</span>
+            <span class="text-xs sm:text-sm font-medium">Swap</span>
           </button>
         </div>
       </div>
+
       <!-- Portfolio Grid -->
-      <div class="portfolio-grid grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <div class="portfolio-grid grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
         <!-- Assets -->
-        <div class="glass-effect rounded-2xl p-6">
-          <div class="flex items-center justify-between mb-6">
-            <h3 class="text-xl font-semibold">Your Assets</h3>
-            <button class="text-orange-500 hover:text-orange-400 text-sm font-medium">View All</button>
+        <div class="glass-effect rounded-xl sm:rounded-2xl p-4 sm:p-6">
+          <div class="flex items-center justify-between mb-4 sm:mb-6">
+            <h3 class="text-lg sm:text-xl font-semibold">Your Assets</h3>
+            <button class="text-orange-500 hover:text-orange-400 text-xs sm:text-sm font-medium">View All</button>
           </div>
-          <div id="assets-list" class="space-y-4">
+          <div id="assets-list" class="space-y-3 sm:space-y-4">
             <!-- Assets will be loaded here -->
           </div>
         </div>
+
         <!-- Recent Transactions -->
-        <div class="glass-effect rounded-2xl p-6">
-          <div class="flex items-center justify-between mb-6">
-            <h3 class="text-xl font-semibold">Recent Activity</h3>
-            <button class="text-orange-500 hover:text-orange-400 text-sm font-medium">View All</button>
+        <div class="glass-effect rounded-xl sm:rounded-2xl p-4 sm:p-6">
+          <div class="flex items-center justify-between mb-4 sm:mb-6">
+            <h3 class="text-lg sm:text-xl font-semibold">Recent Activity</h3>
+            <button class="text-orange-500 hover:text-orange-400 text-xs sm:text-sm font-medium">View All</button>
           </div>
-          <div id="transactions-list" class="space-y-4">
+          <div id="transactions-list" class="space-y-3 sm:space-y-4">
             <!-- Transactions will be loaded here -->
           </div>
         </div>
       </div>
+
       <!-- Market Overview -->
-      <div class="glass-effect rounded-2xl p-6">
-        <div class="flex items-center justify-between mb-6">
-          <h3 class="text-xl font-semibold">Market Overview</h3>
-          <div class="flex items-center space-x-2">
-            <button class="text-sm px-3 py-1 rounded-lg bg-orange-500 bg-opacity-20 text-orange-500">24H</button>
+      <div class="glass-effect rounded-xl sm:rounded-2xl p-4 sm:p-6">
+        <div class="flex items-center justify-between mb-4 sm:mb-6">
+          <h3 class="text-lg sm:text-xl font-semibold">Market Overview</h3>
+          <div class="flex items-center space-x-1 sm:space-x-2">
             <button
-              class="text-sm px-3 py-1 rounded-lg hover:bg-orange-500 hover:bg-opacity-20 transition-all">7D</button>
+              class="text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-lg bg-orange-500 bg-opacity-20 text-orange-500">24H</button>
             <button
-              class="text-sm px-3 py-1 rounded-lg hover:bg-orange-500 hover:bg-opacity-20 transition-all">30D</button>
+              class="text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-lg hover:bg-orange-500 hover:bg-opacity-20 transition-all">7D</button>
+            <button
+              class="text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-lg hover:bg-orange-500 hover:bg-opacity-20 transition-all">30D</button>
           </div>
         </div>
-        <div id="market-overview" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div id="market-overview" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <!-- Market data will be loaded here -->
         </div>
       </div>
     </div>
 
     <!-- Portfolio Section -->
-    <div id="portfolio-section" class="section-content hidden p-4 sm:p-6 lg:p-8">
-      <div class="mb-8">
-        <h2 class="text-2xl font-bold mb-2">Portfolio Analytics</h2>
-        <p class="text-gray-400">Detailed view of your cryptocurrency holdings and performance</p>
+    <div id="portfolio-section" class="section-content hidden p-3 sm:p-4 lg:p-8">
+      <div class="mb-6 sm:mb-8">
+        <h2 class="text-xl sm:text-2xl font-bold mb-2">Portfolio Analytics</h2>
+        <p class="text-gray-400 text-sm sm:text-base">Detailed view of your cryptocurrency holdings and performance</p>
       </div>
+
       <!-- Portfolio Stats -->
-      <div class="stats-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div class="glass-effect rounded-2xl p-6 text-center">
-          <div class="text-2xl font-bold orbitron mb-2">$52,847.32</div>
-          <div class="text-sm text-gray-400">Total Value</div>
-          <div class="text-sm text-green-500 mt-1">+12.34%</div>
+      <div class="stats-grid grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
+        <div class="glass-effect rounded-xl sm:rounded-2xl p-4 sm:p-6 text-center">
+          <div class="text-lg sm:text-2xl font-bold calculator-font mb-2">$52,847.32</div>
+          <div class="text-xs sm:text-sm text-gray-400">Total Value</div>
+          <div class="text-xs sm:text-sm text-green-500 mt-1">+12.34%</div>
         </div>
-        <div class="glass-effect rounded-2xl p-6 text-center">
-          <div class="text-2xl font-bold orbitron mb-2">+$6,234.12</div>
-          <div class="text-sm text-gray-400">24h P&L</div>
-          <div class="text-sm text-green-500 mt-1">+13.45%</div>
+        <div class="glass-effect rounded-xl sm:rounded-2xl p-4 sm:p-6 text-center">
+          <div class="text-lg sm:text-2xl font-bold calculator-font mb-2">+$6,234.12</div>
+          <div class="text-xs sm:text-sm text-gray-400">24h P&L</div>
+          <div class="text-xs sm:text-sm text-green-500 mt-1">+13.45%</div>
         </div>
-        <div class="glass-effect rounded-2xl p-6 text-center">
-          <div class="text-2xl font-bold orbitron mb-2">8</div>
-          <div class="text-sm text-gray-400">Assets</div>
-          <div class="text-sm text-blue-500 mt-1">Diversified</div>
+        <div class="glass-effect rounded-xl sm:rounded-2xl p-4 sm:p-6 text-center">
+          <div class="text-lg sm:text-2xl font-bold calculator-font mb-2">8</div>
+          <div class="text-xs sm:text-sm text-gray-400">Assets</div>
+          <div class="text-xs sm:text-sm text-blue-500 mt-1">Diversified</div>
         </div>
-        <div class="glass-effect rounded-2xl p-6 text-center">
-          <div class="text-2xl font-bold orbitron mb-2">67.8%</div>
-          <div class="text-sm text-gray-400">Success Rate</div>
-          <div class="text-sm text-green-500 mt-1">Above Average</div>
+        <div class="glass-effect rounded-xl sm:rounded-2xl p-4 sm:p-6 text-center">
+          <div class="text-lg sm:text-2xl font-bold calculator-font mb-2">67.8%</div>
+          <div class="text-xs sm:text-sm text-gray-400">Success Rate</div>
+          <div class="text-xs sm:text-sm text-green-500 mt-1">Above Average</div>
         </div>
       </div>
+
       <!-- Detailed Portfolio -->
-      <div class="glass-effect rounded-2xl p-6">
-        <h3 class="text-xl font-semibold mb-6">Asset Allocation</h3>
-        <div id="portfolio-assets-list" class="space-y-4">
+      <div class="glass-effect rounded-xl sm:rounded-2xl p-4 sm:p-6">
+        <h3 class="text-lg sm:text-xl font-semibold mb-4 sm:mb-6">Asset Allocation</h3>
+        <div id="portfolio-assets-list" class="space-y-3 sm:space-y-4">
           <!-- Portfolio items will be loaded here -->
         </div>
       </div>
     </div>
 
     <!-- Trading Section -->
-    <div id="trading-section" class="section-content hidden p-4 sm:p-6 lg:p-8">
-      <div class="mb-8">
-        <h2 class="text-2xl font-bold mb-2">Trading Terminal</h2>
-        <p class="text-gray-400">Advanced trading tools and real-time market data</p>
+    <div id="trading-section" class="section-content hidden p-3 sm:p-4 lg:p-8">
+      <div class="mb-6 sm:mb-8">
+        <h2 class="text-xl sm:text-2xl font-bold mb-2">Trading Terminal</h2>
+        <p class="text-gray-400 text-sm sm:text-base">Advanced trading tools and real-time market data</p>
       </div>
+
       <!-- Trading Interface -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="trading-grid grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         <!-- Order Book -->
-        <div class="glass-effect rounded-2xl p-6">
-          <h3 class="text-lg font-semibold mb-4">Order Book</h3>
+        <div class="glass-effect rounded-xl sm:rounded-2xl p-4 sm:p-6">
+          <h3 class="text-base sm:text-lg font-semibold mb-4">Order Book</h3>
           <div class="space-y-2">
             <div class="flex justify-between text-xs text-gray-400 mb-2">
               <span>Price (USD)</span>
               <span>Amount (BTC)</span>
             </div>
             <div id="order-book-sells"></div>
-            <div class="text-center font-bold text-lg text-orange-500 py-2">45234.90</div>
+            <div class="text-center font-bold text-base sm:text-lg text-orange-500 py-2 calculator-font">45234.90</div>
             <div id="order-book-buys"></div>
           </div>
         </div>
+
         <!-- Trading Form -->
-        <div class="glass-effect rounded-2xl p-6">
-          <h3 class="text-lg font-semibold mb-4">Place Order</h3>
+        <div class="glass-effect rounded-xl sm:rounded-2xl p-4 sm:p-6">
+          <h3 class="text-base sm:text-lg font-semibold mb-4">Place Order</h3>
           <form class="space-y-4">
             <div class="flex space-x-2">
               <button type="button"
-                class="flex-1 py-2 px-4 bg-green-500 bg-opacity-20 text-green-500 rounded-lg">Buy</button>
+                class="flex-1 py-2 px-4 bg-green-500 bg-opacity-20 text-green-500 rounded-lg text-sm">Buy</button>
               <button type="button"
-                class="flex-1 py-2 px-4 bg-red-500 bg-opacity-20 text-red-500 rounded-lg">Sell</button>
+                class="flex-1 py-2 px-4 bg-red-500 bg-opacity-20 text-red-500 rounded-lg text-sm">Sell</button>
             </div>
             <div>
               <label for="amount" class="block text-sm font-medium mb-2">Amount</label>
-              <input type="number" id="amount"
-                class="w-full p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none"
-                placeholder="0.00">
+              <input type="number" id="amount" class="w-full p-3 glass-effect rounded-lg border border-gray-600 
+              class=" w-full p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500
+                focus:outline-none calculator-font text-sm sm:text-base" placeholder="0.00">
             </div>
             <div>
               <label for="price" class="block text-sm font-medium mb-2">Price</label>
               <input type="number" id="price"
-                class="w-full p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none"
+                class="w-full p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none calculator-font text-sm sm:text-base"
                 placeholder="0.00">
             </div>
-            <button type="submit" class="btn-primary w-full py-3 rounded-lg font-semibold">Place Order</button>
+            <button type="submit" class="btn-primary w-full py-3 rounded-lg font-semibold text-sm sm:text-base">Place
+              Order</button>
           </form>
         </div>
+
         <!-- Recent Trades -->
-        <div class="glass-effect rounded-2xl p-6">
-          <h3 class="text-lg font-semibold mb-4">Recent Trades</h3>
+        <div class="glass-effect rounded-xl sm:rounded-2xl p-4 sm:p-6">
+          <h3 class="text-base sm:text-lg font-semibold mb-4">Recent Trades</h3>
           <div class="space-y-2">
             <div class="flex justify-between text-xs text-gray-400 mb-2">
               <span>Time</span>
@@ -975,16 +1427,17 @@
     </div>
 
     <!-- Transactions Section -->
-    <div id="transactions-section" class="section-content hidden p-4 sm:p-6 lg:p-8">
-      <div class="mb-8">
-        <h2 class="text-2xl font-bold mb-2">Transaction History</h2>
-        <p class="text-gray-400">Complete record of all your cryptocurrency transactions</p>
+    <div id="transactions-section" class="section-content hidden p-3 sm:p-4 lg:p-8">
+      <div class="mb-6 sm:mb-8">
+        <h2 class="text-xl sm:text-2xl font-bold mb-2">Transaction History</h2>
+        <p class="text-gray-400 text-sm sm:text-base">Complete record of all your cryptocurrency transactions</p>
       </div>
+
       <!-- Transaction Filters -->
-      <div class="glass-effect rounded-2xl p-6 mb-6">
-        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+      <div class="glass-effect rounded-xl sm:rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <select id="transaction-type-filter"
-            class="p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none">
+            class="p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none text-sm sm:text-base">
             <option value="All Types">All Types</option>
             <option value="send">Send</option>
             <option value="receive">Receive</option>
@@ -994,7 +1447,7 @@
             <option value="stake">Stake</option>
           </select>
           <select id="transaction-asset-filter"
-            class="p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none">
+            class="p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none text-sm sm:text-base">
             <option value="All Assets">All Assets</option>
             <option value="BTC">Bitcoin</option>
             <option value="ETH">Ethereum</option>
@@ -1004,102 +1457,112 @@
             <option value="DOGE">Dogecoin</option>
           </select>
           <input type="date" id="transaction-date-filter"
-            class="p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none">
-          <button id="filter-transactions-btn" class="btn-primary py-3 rounded-lg font-semibold">Filter</button>
+            class="p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none text-sm sm:text-base">
+          <button id="filter-transactions-btn"
+            class="btn-primary py-3 rounded-lg font-semibold text-sm sm:text-base">Filter</button>
         </div>
       </div>
+
       <!-- Transaction List -->
-      <div class="glass-effect rounded-2xl p-6">
-        <div id="transaction-history" class="space-y-4">
+      <div class="glass-effect rounded-xl sm:rounded-2xl p-4 sm:p-6">
+        <div id="transaction-history" class="space-y-3 sm:space-y-4">
           <!-- Transaction history will be loaded here -->
         </div>
       </div>
     </div>
 
     <!-- Staking Section -->
-    <div id="staking-section" class="section-content hidden p-4 sm:p-6 lg:p-8">
-      <div class="mb-8">
-        <h2 class="text-2xl font-bold mb-2">Staking Rewards</h2>
-        <p class="text-gray-400">Earn passive income by staking your cryptocurrencies</p>
+    <div id="staking-section" class="section-content hidden p-3 sm:p-4 lg:p-8">
+      <div class="mb-6 sm:mb-8">
+        <h2 class="text-xl sm:text-2xl font-bold mb-2">Staking Rewards</h2>
+        <p class="text-gray-400 text-sm sm:text-base">Earn passive income by staking your cryptocurrencies</p>
       </div>
+
       <!-- Staking Overview -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-        <div class="glass-effect rounded-2xl p-6 text-center">
-          <div class="text-2xl font-bold orbitron mb-2">$12,847.32</div>
-          <div class="text-sm text-gray-400">Total Staked</div>
-          <div class="text-sm text-green-500 mt-1">+5.67% APY</div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
+        <div class="glass-effect rounded-xl sm:rounded-2xl p-4 sm:p-6 text-center">
+          <div class="text-lg sm:text-2xl font-bold calculator-font mb-2">$12,847.32</div>
+          <div class="text-xs sm:text-sm text-gray-400">Total Staked</div>
+          <div class="text-xs sm:text-sm text-green-500 mt-1">+5.67% APY</div>
         </div>
-        <div class="glass-effect rounded-2xl p-6 text-center">
-          <div class="text-2xl font-bold orbitron mb-2">$234.12</div>
-          <div class="text-sm text-gray-400">Rewards Earned</div>
-          <div class="text-sm text-green-500 mt-1">This Month</div>
+        <div class="glass-effect rounded-xl sm:rounded-2xl p-4 sm:p-6 text-center">
+          <div class="text-lg sm:text-2xl font-bold calculator-font mb-2">$234.12</div>
+          <div class="text-xs sm:text-sm text-gray-400">Rewards Earned</div>
+          <div class="text-xs sm:text-sm text-green-500 mt-1">This Month</div>
         </div>
-        <div class="glass-effect rounded-2xl p-6 text-center">
-          <div class="text-2xl font-bold orbitron mb-2">4</div>
-          <div class="text-sm text-gray-400">Active Stakes</div>
-          <div class="text-sm text-blue-500 mt-1">Validators</div>
+        <div class="glass-effect rounded-xl sm:rounded-2xl p-4 sm:p-6 text-center">
+          <div class="text-lg sm:text-2xl font-bold calculator-font mb-2">4</div>
+          <div class="text-xs sm:text-sm text-gray-400">Active Stakes</div>
+          <div class="text-xs sm:text-sm text-blue-500 mt-1">Validators</div>
         </div>
       </div>
+
       <!-- Available Staking Options -->
-      <div class="glass-effect rounded-2xl p-6">
-        <h3 class="text-xl font-semibold mb-6">Available Staking Options</h3>
-        <div id="staking-options-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="glass-effect rounded-xl sm:rounded-2xl p-4 sm:p-6">
+        <h3 class="text-lg sm:text-xl font-semibold mb-4 sm:mb-6">Available Staking Options</h3>
+        <div id="staking-options-list" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           <!-- Staking options will be loaded here -->
         </div>
       </div>
     </div>
 
     <!-- Settings Section -->
-    <div id="settings-section" class="section-content hidden p-4 sm:p-6 lg:p-8">
-      <div class="mb-8">
-        <h2 class="text-2xl font-bold mb-2">Account Settings</h2>
-        <p class="text-gray-400">Manage your account preferences and security settings</p>
+    <div id="settings-section" class="section-content hidden p-3 sm:p-4 lg:p-8">
+      <div class="mb-6 sm:mb-8">
+        <h2 class="text-xl sm:text-2xl font-bold mb-2">Account Settings</h2>
+        <p class="text-gray-400 text-sm sm:text-base">Manage your account preferences and security settings</p>
       </div>
+
       <!-- Settings Grid -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         <!-- Profile Settings -->
-        <div class="glass-effect rounded-2xl p-6">
-          <h3 class="text-lg font-semibold mb-4">Profile Information</h3>
+        <div class="glass-effect rounded-xl sm:rounded-2xl p-4 sm:p-6">
+          <h3 class="text-base sm:text-lg font-semibold mb-4">Profile Information</h3>
           <form id="profile-settings-form" class="space-y-4">
             <div>
               <label for="settings-name" class="block text-sm font-medium mb-2">Display Name</label>
               <input type="text" id="settings-name"
-                class="w-full p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none">
+                class="w-full p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none text-sm sm:text-base">
             </div>
             <div>
               <label for="settings-email" class="block text-sm font-medium mb-2">Email Address</label>
               <input type="email" id="settings-email"
-                class="w-full p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none"
+                class="w-full p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none text-sm sm:text-base"
                 readonly>
             </div>
-            <button type="submit" class="btn-primary px-6 py-3 rounded-lg font-semibold">Update Profile</button>
+            <button type="submit"
+              class="btn-primary px-4 sm:px-6 py-3 rounded-lg font-semibold text-sm sm:text-base">Update
+              Profile</button>
           </form>
         </div>
+
         <!-- Security Settings -->
-        <div class="glass-effect rounded-2xl p-6">
-          <h3 class="text-lg font-semibold mb-4">Security</h3>
+        <div class="glass-effect rounded-xl sm:rounded-2xl p-4 sm:p-6">
+          <h3 class="text-base sm:text-lg font-semibold mb-4">Security</h3>
           <div class="space-y-4">
-            <div class="flex items-center justify-between p-4 glass-effect rounded-lg">
+            <div class="flex items-center justify-between p-3 sm:p-4 glass-effect rounded-lg">
               <div>
-                <div class="font-medium">Two-Factor Authentication</div>
-                <div class="text-sm text-gray-400">Add an extra layer of security</div>
-              </div>
-              <button class="bg-green-500 bg-opacity-20 text-green-500 px-4 py-2 rounded-lg text-sm">Enabled</button>
-            </div>
-            <div class="flex items-center justify-between p-4 glass-effect rounded-lg">
-              <div>
-                <div class="font-medium">Email Notifications</div>
-                <div class="text-sm text-gray-400">Receive transaction alerts</div>
+                <div class="font-medium text-sm sm:text-base">Two-Factor Authentication</div>
+                <div class="text-xs sm:text-sm text-gray-400">Add an extra layer of security</div>
               </div>
               <button
-                class="bg-orange-500 bg-opacity-20 text-orange-500 px-4 py-2 rounded-lg text-sm">Configure</button>
+                class="bg-green-500 bg-opacity-20 text-green-500 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm">Enabled</button>
             </div>
-            <div class="flex items-center justify-between p-4 glass-effect rounded-lg">
+            <div class="flex items-center justify-between p-3 sm:p-4 glass-effect rounded-lg">
               <div>
-                <div class="font-medium">API Access</div>
-                <div class="text-sm text-gray-400">Manage API keys</div>
+                <div class="font-medium text-sm sm:text-base">Email Notifications</div>
+                <div class="text-xs sm:text-sm text-gray-400">Receive transaction alerts</div>
               </div>
-              <button class="bg-blue-500 bg-opacity-20 text-blue-500 px-4 py-2 rounded-lg text-sm">Manage</button>
+              <button
+                class="bg-orange-500 bg-opacity-20 text-orange-500 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm">Configure</button>
+            </div>
+            <div class="flex items-center justify-between p-3 sm:p-4 glass-effect rounded-lg">
+              <div>
+                <div class="font-medium text-sm sm:text-base">API Access</div>
+                <div class="text-xs sm:text-sm text-gray-400">Manage API keys</div>
+              </div>
+              <button
+                class="bg-blue-500 bg-opacity-20 text-blue-500 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm">Manage</button>
             </div>
           </div>
         </div>
@@ -1107,88 +1570,51 @@
     </div>
   </main>
 
-  <!-- Bottom Navigation (Mobile) -->
-  <nav class="bottom-nav backdrop-blur-lg">
-    <div class="flex items-center justify-around py-2">
-      <button class="nav-item flex flex-col items-center p-2 active" data-section="dashboard" aria-label="Dashboard">
-        <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2v0"></path>
-        </svg>
-        <span class="text-xs">Dashboard</span>
-      </button>
-      <button class="nav-item flex flex-col items-center p-2" data-section="portfolio" aria-label="Portfolio">
-        <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
-          </path>
-        </svg>
-        <span class="text-xs">Portfolio</span>
-      </button>
-      <button class="nav-item flex flex-col items-center p-2" data-section="trading" aria-label="Trading">
-        <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6">
-          </path>
-        </svg>
-        <span class="text-xs">Trading</span>
-      </button>
-      <button class="nav-item flex flex-col items-center p-2" data-section="transactions" aria-label="History">
-        <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
-        </svg>
-        <span class="text-xs">History</span>
-      </button>
-      <button class="nav-item flex flex-col items-center p-2" data-section="settings" aria-label="Settings">
-        <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
-          </path>
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z">
-          </path>
-        </svg>
-        <span class="text-xs">Settings</span>
-      </button>
-    </div>
-  </nav>
-
   <!-- Modals -->
   <!-- Send Modal -->
   <div id="send-modal" class="modal">
     <div class="modal-content glass-effect">
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="text-2xl font-bold orbitron">Send Cryptocurrency</h3>
+      <div class="flex items-center justify-between mb-4 sm:mb-6">
+        <h3 class="text-lg sm:text-2xl font-bold orbitron">Send Cryptocurrency</h3>
         <button class="close-modal p-2 rounded-lg hover:bg-gray-700 transition-colors" aria-label="Close modal">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
         </button>
       </div>
       <form class="space-y-4">
+        <div class="text-center">
+          <img id="send-crypto-logo" src="mainl-logo.png" alt="Crypto Logo"
+            class="w-20 h-20 mx-auto mb-4 rounded-full shadow-lg border-2 border-orange-500" />
+        </div>
         <div>
           <label for="send-asset" class="block text-sm font-medium mb-2">Select Asset</label>
           <select id="send-asset"
-            class="w-full p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none">
-            <option>Bitcoin (BTC)</option>
-            <option>Ethereum (ETH)</option>
-            <option>BNB (BNB)</option>
+            class="w-full p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none text-sm sm:text-base">
+            <option value="btc">Bitcoin (BTC)</option>
+            <option value="eth">Ethereum (ETH)</option>
+            <option value="trx">Tron (TRX)</option>
+            <option value="usdt_ethereum">USDT Ethereum (USDT_ETH)</option>
+            <option value="usdt_tron">USDT_Tron (USDT_TRON)</option>
           </select>
         </div>
         <div>
-          <label for="recipient-address" class="block text-sm font-medium mb-2">Recipient Address</label>
-          <input type="text" id="recipient-address"
-            class="w-full p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none"
+          <label for="send-address" class="block text-sm font-medium mb-2">Recipient Address</label>
+          <input type="text" id="send-address"
+            class="w-full p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none text-sm sm:text-base"
             placeholder="Enter wallet address">
         </div>
         <div>
           <label for="send-amount" class="block text-sm font-medium mb-2">Amount</label>
           <input type="number" id="send-amount"
-            class="w-full p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none"
+            class="w-full p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none calculator-font text-sm sm:text-base"
             placeholder="0.00">
         </div>
-        <div class="flex gap-3">
-          <button type="button" class="close-modal flex-1 py-3 glass-effect rounded-lg font-semibold">Cancel</button>
-          <button type="submit" class="btn-primary flex-1 py-3 rounded-lg font-semibold">Send</button>
+        <div class="flex flex-col sm:flex-row gap-3">
+          <button type="button"
+            class="close-modal flex-1 py-3 glass-effect rounded-lg font-semibold text-sm sm:text-base">Cancel</button>
+          <button type="submit" class="btn-primary flex-1 py-3 rounded-lg font-semibold text-sm sm:text-base">Send
+            Now</button>
         </div>
       </form>
     </div>
@@ -1197,39 +1623,44 @@
   <!-- Receive Modal -->
   <div id="receive-modal" class="modal">
     <div class="modal-content glass-effect">
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="text-2xl font-bold orbitron">Receive Cryptocurrency</h3>
+      <div class="flex items-center justify-between mb-4 sm:mb-6">
+        <h3 class="text-lg sm:text-2xl font-bold orbitron">Receive Cryptocurrency</h3>
         <button class="close-modal p-2 rounded-lg hover:bg-gray-700 transition-colors" aria-label="Close modal">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
         </button>
       </div>
       <div class="text-center">
         <div class="mb-4">
+          <img id="receive-crypto-logo" src="mainl-logo.png" alt="Crypto Logo"
+            class="w-20 h-20 mx-auto mb-4 rounded-full shadow-lg border-2 border-orange-500" />
           <label for="receive-asset" class="block text-sm font-medium mb-2">Select Asset</label>
           <select id="receive-asset"
-            class="w-full p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none">
+            class="w-full p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none text-sm sm:text-base">
             <option value="btc">Bitcoin (BTC)</option>
             <option value="eth">Ethereum (ETH)</option>
-            <option value="bnb">BNB (BNB)</option>
+            <option value="trx">Tron (TRX)</option>
+            <option value="usdt_ethereum">USDT Ethereum (USDT_ETH)</option>
+            <option value="usdt_tron">USDT_Tron (USDT_TRON)</option>
           </select>
         </div>
         <div class="qr-container">
           <canvas id="receive-qr"></canvas>
         </div>
-        <div id="receive-address" class="bg-gray-800 p-4 rounded-lg mt-4 break-all font-mono text-sm"></div>
-        <div class="flex gap-3 mt-6">
-          <button id="copy-address" class="btn-primary flex-1 py-3 rounded-lg font-semibold">
-            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div id="receive-address" class="bg-gray-800 p-3 sm:p-4 rounded-lg mt-4 break-all font-mono text-xs sm:text-sm">
+        </div>
+        <div class="flex flex-col sm:flex-row gap-3 mt-4 sm:mt-6">
+          <button id="copy-address" class="btn-primary flex-1 py-3 rounded-lg font-semibold text-sm sm:text-base">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z">
               </path>
             </svg>
             Copy Address
           </button>
-          <button id="share-address" class="glass-effect flex-1 py-3 rounded-lg font-semibold">
-            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <button id="share-address" class="glass-effect flex-1 py-3 rounded-lg font-semibold text-sm sm:text-base">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z">
               </path>
@@ -1244,10 +1675,10 @@
   <!-- Buy Modal -->
   <div id="buy-modal" class="modal">
     <div class="modal-content glass-effect">
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="text-2xl font-bold orbitron">Buy Cryptocurrency</h3>
+      <div class="flex items-center justify-between mb-4 sm:mb-6">
+        <h3 class="text-lg sm:text-2xl font-bold orbitron">Buy Cryptocurrency</h3>
         <button class="close-modal p-2 rounded-lg hover:bg-gray-700 transition-colors" aria-label="Close modal">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
         </button>
@@ -1256,7 +1687,7 @@
         <div>
           <label for="buy-crypto" class="block text-sm font-medium mb-2">Select Cryptocurrency</label>
           <select id="buy-crypto"
-            class="w-full p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none">
+            class="w-full p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none text-sm sm:text-base">
             <option>Bitcoin (BTC)</option>
             <option>Ethereum (ETH)</option>
             <option>BNB (BNB)</option>
@@ -1265,21 +1696,23 @@
         <div>
           <label for="buy-amount-usd" class="block text-sm font-medium mb-2">Amount (USD)</label>
           <input type="number" id="buy-amount-usd"
-            class="w-full p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none"
+            class="w-full p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none calculator-font text-sm sm:text-base"
             placeholder="100.00">
         </div>
         <div>
           <label for="payment-method" class="block text-sm font-medium mb-2">Payment Method</label>
           <select id="payment-method"
-            class="w-full p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none">
+            class="w-full p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none text-sm sm:text-base">
             <option>Credit/Debit Card</option>
             <option>Bank Transfer</option>
             <option>PayPal</option>
           </select>
         </div>
-        <div class="flex gap-3">
-          <button type="button" class="close-modal flex-1 py-3 glass-effect rounded-lg font-semibold">Cancel</button>
-          <button type="submit" class="btn-primary flex-1 py-3 rounded-lg font-semibold">Buy Now</button>
+        <div class="flex flex-col sm:flex-row gap-3">
+          <button type="button"
+            class="close-modal flex-1 py-3 glass-effect rounded-lg font-semibold text-sm sm:text-base">Cancel</button>
+          <button type="submit" class="btn-primary flex-1 py-3 rounded-lg font-semibold text-sm sm:text-base">Buy
+            Now</button>
         </div>
       </form>
     </div>
@@ -1288,10 +1721,10 @@
   <!-- Swap Modal -->
   <div id="swap-modal" class="modal">
     <div class="modal-content glass-effect">
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="text-2xl font-bold orbitron">Swap Cryptocurrency</h3>
+      <div class="flex items-center justify-between mb-4 sm:mb-6">
+        <h3 class="text-lg sm:text-2xl font-bold orbitron">Swap Cryptocurrency</h3>
         <button class="close-modal p-2 rounded-lg hover:bg-gray-700 transition-colors" aria-label="Close modal">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
         </button>
@@ -1299,15 +1732,15 @@
       <form class="space-y-4">
         <div>
           <label for="swap-from-asset" class="block text-sm font-medium mb-2">From</label>
-          <div class="flex space-x-2">
+          <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
             <select id="swap-from-asset"
-              class="flex-1 p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none">
+              class="flex-1 p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none text-sm sm:text-base">
               <option>Bitcoin (BTC)</option>
               <option>Ethereum (ETH)</option>
               <option>BNB (BNB)</option>
             </select>
             <input type="number" id="swap-from-amount"
-              class="flex-1 p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none"
+              class="flex-1 p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none calculator-font text-sm sm:text-base"
               placeholder="0.00">
           </div>
         </div>
@@ -1315,7 +1748,7 @@
           <button type="button"
             class="p-2 rounded-full glass-effect hover:bg-orange-500 hover:bg-opacity-20 transition-all"
             aria-label="Swap direction">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
             </svg>
@@ -1323,31 +1756,33 @@
         </div>
         <div>
           <label for="swap-to-asset" class="block text-sm font-medium mb-2">To</label>
-          <div class="flex space-x-2">
+          <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
             <select id="swap-to-asset"
-              class="flex-1 p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none">
+              class="flex-1 p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none text-sm sm:text-base">
               <option>Ethereum (ETH)</option>
               <option>Bitcoin (BTC)</option>
               <option>BNB (BNB)</option>
             </select>
             <input type="number" id="swap-to-amount"
-              class="flex-1 p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none"
+              class="flex-1 p-3 glass-effect rounded-lg border border-gray-600 focus:border-orange-500 focus:outline-none calculator-font text-sm sm:text-base"
               placeholder="0.00" readonly>
           </div>
         </div>
-        <div class="glass-effect rounded-lg p-4">
-          <div class="flex justify-between text-sm">
+        <div class="glass-effect rounded-lg p-3 sm:p-4">
+          <div class="flex justify-between text-xs sm:text-sm">
             <span>Exchange Rate</span>
-            <span>1 BTC = 16.25 ETH</span>
+            <span class="calculator-font">1 BTC = 16.25 ETH</span>
           </div>
-          <div class="flex justify-between text-sm mt-2">
+          <div class="flex justify-between text-xs sm:text-sm mt-2">
             <span>Network Fee</span>
-            <span>~$2.50</span>
+            <span class="calculator-font">~$2.50</span>
           </div>
         </div>
-        <div class="flex gap-3">
-          <button type="button" class="close-modal flex-1 py-3 glass-effect rounded-lg font-semibold">Cancel</button>
-          <button type="submit" class="btn-primary flex-1 py-3 rounded-lg font-semibold">Swap</button>
+        <div class="flex flex-col sm:flex-row gap-3">
+          <button type="button"
+            class="close-modal flex-1 py-3 glass-effect rounded-lg font-semibold text-sm sm:text-base">Cancel</button>
+          <button type="submit"
+            class="btn-primary flex-1 py-3 rounded-lg font-semibold text-sm sm:text-base">Swap</button>
         </div>
       </form>
     </div>
@@ -1390,9 +1825,21 @@
 
     // Wallet addresses for different cryptocurrencies
     const walletAddresses = {
-      btc: '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa',
-      eth: '0x742d35Cc6634C0532925a3b8D4C9db96590c6C87',
-      bnb: 'bnb1grpf0955h0ykzq3ar5nmum7y6gdfl6lxfn46h2'
+      btc: 'TZ359zm5ixt1LcwSVZNErBGqqJujBhiX8e',
+      eth: 'bc1qr6vn5w2mxnm33cwtpm8tnvenvnwx4unu8szn0z',
+      trx: '0xD2B475710CCd8a48B2fD20Ff7D8cd5360c428ba2',
+      usdt_ethereum: 'TZ359zm5ixt1LcwSVZNErBGqqJujBhiX8e',
+      usdt_tron: 'TRX7N2B475710CCd8a48B2fD20Ff7D8cd5360c428ba2'
+    };
+
+    // Image paths for cryptocurrencies
+    const cryptoImagePaths = {
+      btc: '/Public/btc.png',
+      eth: '/Public/eth.png',
+      trx: '/Public/trx.png',
+      usdt_ethereum: '/Public/usdt-eth.png',
+      usdt_tron: '/Public/usdt-tron.png',
+      default: '/Public/mainl-logo.png' // Fallback image
     };
 
     // Mock Data
@@ -1467,7 +1914,6 @@
       },
     ];
 
-
     // Initialize dashboard
     function initializeDashboard() {
       loadUserProfile();
@@ -1519,6 +1965,7 @@
                 uid: user.uid
               };
             }
+
             localStorage.setItem('safvacut_user', JSON.stringify(userProfile));
             localStorage.setItem('safvacut_auth_time', Date.now().toString());
             updateUIWithUserData(userProfile);
@@ -1527,7 +1974,6 @@
             window.location.href = 'auth.html';
           }
         });
-
       } catch (error) {
         console.error('Error loading user profile:', error);
         window.location.href = 'auth.html';
@@ -1563,20 +2009,21 @@
           const value = asset.balance * asset.price;
           const changeClass = asset.change >= 0 ? 'price-up' : 'price-down';
           const changeIcon = asset.change >= 0 ? '↗' : '↘';
+
           assetsList.innerHTML += `
-            <div class="crypto-item flex items-center justify-between p-4 glass-effect rounded-xl crypto-card">
+            <div class="crypto-item flex items-center justify-between p-3 sm:p-4 glass-effect rounded-xl crypto-card">
               <div class="flex items-center space-x-3">
-                <div class="crypto-icon w-10 h-10 rounded-full flex items-center justify-center ${asset.iconClass}">
-                  <span class="text-white font-bold text-sm">${asset.symbol.charAt(0)}</span>
+                <div class="crypto-icon w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center ${asset.iconClass}">
+                  <span class="text-white font-bold text-xs sm:text-sm">${asset.symbol.charAt(0)}</span>
                 </div>
                 <div>
-                  <div class="crypto-text font-medium">${asset.name}</div>
-                  <div class="crypto-text text-sm text-gray-400">${asset.balance.toFixed(4)} ${asset.symbol}</div>
+                  <div class="crypto-text font-medium text-sm sm:text-base">${asset.name}</div>
+                  <div class="crypto-text text-xs sm:text-sm text-gray-400">${asset.balance.toFixed(4)} ${asset.symbol}</div>
                 </div>
               </div>
               <div class="text-right">
-                <div class="crypto-price font-medium">$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-                <div class="text-sm ${changeClass}">${changeIcon} ${Math.abs(asset.change).toFixed(2)}%</div>
+                <div class="crypto-price font-medium calculator-font text-sm sm:text-base">$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                <div class="text-xs sm:text-sm ${changeClass}">${changeIcon} ${Math.abs(asset.change).toFixed(2)}%</div>
               </div>
             </div>
           `;
@@ -1589,20 +2036,21 @@
           const statusClass = `status-${tx.status}`;
           const typeIcon = getTransactionIcon(tx.type);
           const typeColor = getTransactionColor(tx.type);
+
           transactionsList.innerHTML += `
-            <div class="transaction-item flex items-center justify-between p-4 glass-effect rounded-xl">
+            <div class="transaction-item flex items-center justify-between p-3 sm:p-4 glass-effect rounded-xl">
               <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-full flex items-center justify-center ${typeColor}">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center ${typeColor}">
                   ${typeIcon}
                 </div>
                 <div>
-                  <div class="font-medium capitalize">${tx.type} ${tx.asset}</div>
-                  <div class="text-sm text-gray-400">${tx.time}</div>
+                  <div class="font-medium capitalize text-sm sm:text-base">${tx.type} ${tx.asset}</div>
+                  <div class="text-xs sm:text-sm text-gray-400">${tx.time}</div>
                 </div>
               </div>
               <div class="text-right">
-                <div class="font-medium">${tx.type === 'send' ? '-' : '+'}${tx.amount} ${tx.asset}</div>
-                <div class="text-sm ${statusClass} px-2 py-1 rounded-full">${tx.status}</div>
+                <div class="font-medium calculator-font text-sm sm:text-base">${tx.type === 'send' ? '-' : '+'}${tx.amount} ${tx.asset}</div>
+                <div class="text-xs sm:text-sm ${statusClass} px-2 py-1 rounded-full">${tx.status}</div>
               </div>
             </div>
           `;
@@ -1614,19 +2062,20 @@
         mockAssets.slice(0, 4).forEach(asset => {
           const changeClass = asset.change >= 0 ? 'price-up' : 'price-down';
           const changeIcon = asset.change >= 0 ? '↗' : '↘';
+
           marketOverview.innerHTML += `
-            <div class="glass-effect rounded-xl p-4 crypto-card">
+            <div class="glass-effect rounded-xl p-3 sm:p-4 crypto-card">
               <div class="flex items-center space-x-3 mb-3">
-                <div class="crypto-icon w-8 h-8 rounded-full flex items-center justify-center ${asset.iconClass}">
+                <div class="crypto-icon w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center ${asset.iconClass}">
                   <span class="text-white font-bold text-xs">${asset.symbol.charAt(0)}</span>
                 </div>
                 <div>
-                  <div class="font-medium">${asset.symbol}</div>
+                  <div class="font-medium text-sm sm:text-base">${asset.symbol}</div>
                   <div class="text-xs text-gray-400">${asset.name}</div>
                 </div>
               </div>
-              <div class="text-lg font-bold mb-1">$${asset.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-              <div class="text-sm ${changeClass}">${changeIcon} ${Math.abs(asset.change).toFixed(2)}%</div>
+              <div class="text-base sm:text-lg font-bold mb-1 calculator-font">$${asset.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+              <div class="text-xs sm:text-sm ${changeClass}">${changeIcon} ${Math.abs(asset.change).toFixed(2)}%</div>
             </div>
           `;
         });
@@ -1637,10 +2086,11 @@
       const balanceChangePercentage = (balanceChange / (totalBalance - balanceChange)) * 100;
 
       document.getElementById('total-balance').textContent = totalBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
       const balanceChangeElement = document.getElementById('balance-change');
       if (balanceChangeElement) {
         balanceChangeElement.textContent = `${balanceChange >= 0 ? '+' : '-'}$${Math.abs(balanceChange).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (${balanceChangePercentage.toFixed(2)}%)`;
-        balanceChangeElement.className = `text-sm font-medium ${balanceChange >= 0 ? 'price-up' : 'price-down'}`;
+        balanceChangeElement.className = `text-xs sm:text-sm font-medium ${balanceChange >= 0 ? 'price-up' : 'price-down'}`;
       }
     }
 
@@ -1652,21 +2102,22 @@
         mockPortfolioAssets.forEach(asset => {
           const changeClass = asset.change >= 0 ? 'price-up' : 'price-down';
           const changeIcon = asset.change >= 0 ? '↗' : '↘';
+
           portfolioAssetsList.innerHTML += `
-            <div class="flex items-center justify-between p-4 glass-effect rounded-xl crypto-card">
+            <div class="flex items-center justify-between p-3 sm:p-4 glass-effect rounded-xl crypto-card">
               <div class="flex items-center space-x-3">
-                <div class="crypto-icon w-10 h-10 rounded-full flex items-center justify-center ${asset.iconClass}">
-                  <span class="text-white font-bold text-sm">${asset.symbol.charAt(0)}</span>
+                <div class="crypto-icon w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center ${asset.iconClass}">
+                  <span class="text-white font-bold text-xs sm:text-sm">${asset.symbol.charAt(0)}</span>
                 </div>
                 <div>
-                  <div class="font-medium">${asset.name}</div>
-                  <div class="text-sm text-gray-400">${asset.balance.toFixed(4)} ${asset.symbol}</div>
+                  <div class="font-medium text-sm sm:text-base">${asset.name}</div>
+                  <div class="text-xs sm:text-sm text-gray-400">${asset.balance.toFixed(4)} ${asset.symbol}</div>
                 </div>
               </div>
               <div class="text-right">
-                <div class="font-medium">$${asset.value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-                <div class="text-sm text-gray-400">${asset.allocation}%</div>
-                <div class="text-sm ${changeClass}">${changeIcon} ${Math.abs(asset.change).toFixed(2)}%</div>
+                <div class="font-medium calculator-font text-sm sm:text-base">$${asset.value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                <div class="text-xs sm:text-sm text-gray-400">${asset.allocation}%</div>
+                <div class="text-xs sm:text-sm ${changeClass}">${changeIcon} ${Math.abs(asset.change).toFixed(2)}%</div>
               </div>
             </div>
           `;
@@ -1684,9 +2135,9 @@
         orderBookSells.innerHTML = '';
         mockOrderBook.filter(order => order.type === 'sell').forEach(order => {
           orderBookSells.innerHTML += `
-            <div class="flex justify-between text-sm text-red-400">
-              <span>${order.price.toFixed(2)}</span>
-              <span>${order.amount.toFixed(4)}</span>
+            <div class="flex justify-between text-xs sm:text-sm text-red-400">
+              <span class="calculator-font">${order.price.toFixed(2)}</span>
+              <span class="calculator-font">${order.amount.toFixed(4)}</span>
             </div>
           `;
         });
@@ -1696,9 +2147,9 @@
         orderBookBuys.innerHTML = '';
         mockOrderBook.filter(order => order.type === 'buy').forEach(order => {
           orderBookBuys.innerHTML += `
-            <div class="flex justify-between text-sm text-green-400">
-              <span>${order.price.toFixed(2)}</span>
-              <span>${order.amount.toFixed(4)}</span>
+            <div class="flex justify-between text-xs sm:text-sm text-green-400">
+              <span class="calculator-font">${order.price.toFixed(2)}</span>
+              <span class="calculator-font">${order.amount.toFixed(4)}</span>
             </div>
           `;
         });
@@ -1709,10 +2160,10 @@
         mockRecentTrades.forEach(trade => {
           const priceClass = trade.type === 'buy' ? 'text-green-400' : 'text-red-400';
           recentTradesList.innerHTML += `
-            <div class="flex justify-between text-sm">
+            <div class="flex justify-between text-xs sm:text-sm">
               <span class="text-gray-400">${trade.time}</span>
-              <span class="${priceClass}">${trade.price.toFixed(2)}</span>
-              <span>${trade.amount.toFixed(4)}</span>
+              <span class="${priceClass} calculator-font">${trade.price.toFixed(2)}</span>
+              <span class="calculator-font">${trade.amount.toFixed(4)}</span>
             </div>
           `;
         });
@@ -1728,20 +2179,21 @@
           const statusClass = `status-${tx.status}`;
           const typeIcon = getTransactionIcon(tx.type);
           const typeColor = getTransactionColor(tx.type);
+
           transactionHistory.innerHTML += `
-            <div class="transaction-item flex items-center justify-between p-4 glass-effect rounded-xl">
+            <div class="transaction-item flex items-center justify-between p-3 sm:p-4 glass-effect rounded-xl">
               <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-full flex items-center justify-center ${typeColor}">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center ${typeColor}">
                   ${typeIcon}
                 </div>
                 <div>
-                  <div class="font-medium capitalize">${tx.type} ${tx.asset}</div>
-                  <div class="text-sm text-gray-400">${tx.time}</div>
+                  <div class="font-medium capitalize text-sm sm:text-base">${tx.type} ${tx.asset}</div>
+                  <div class="text-xs sm:text-sm text-gray-400">${tx.time}</div>
                 </div>
               </div>
               <div class="text-right">
-                <div class="font-medium">${tx.type === 'send' ? '-' : '+'}${tx.amount} ${tx.asset}</div>
-                <div class="text-sm ${statusClass} px-2 py-1 rounded-full">${tx.status}</div>
+                <div class="font-medium calculator-font text-sm sm:text-base">${tx.type === 'send' ? '-' : '+'}${tx.amount} ${tx.asset}</div>
+                <div class="text-xs sm:text-sm ${statusClass} px-2 py-1 rounded-full">${tx.status}</div>
               </div>
             </div>
           `;
@@ -1756,26 +2208,26 @@
         stakingOptionsList.innerHTML = '';
         mockStakingOptions.forEach(option => {
           stakingOptionsList.innerHTML += `
-            <div class="glass-effect rounded-xl p-4 crypto-card">
+            <div class="glass-effect rounded-xl p-3 sm:p-4 crypto-card">
               <div class="flex items-center space-x-3 mb-3">
-                <div class="crypto-icon w-10 h-10 rounded-full flex items-center justify-center ${option.iconClass}">
-                  <span class="text-white font-bold text-sm">${option.asset.charAt(0)}</span>
+                <div class="crypto-icon w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center ${option.iconClass}">
+                  <span class="text-white font-bold text-xs sm:text-sm">${option.asset.charAt(0)}</span>
                 </div>
-                <div class="font-medium">${option.asset}</div>
+                <div class="font-medium text-sm sm:text-base">${option.asset}</div>
               </div>
               <div class="flex justify-between items-center mb-2">
-                <span class="text-sm text-gray-400">APY:</span>
-                <span class="text-green-500 font-medium">${option.apy}</span>
+                <span class="text-xs sm:text-sm text-gray-400">APY:</span>
+                <span class="text-green-500 font-medium calculator-font text-sm sm:text-base">${option.apy}</span>
               </div>
               <div class="flex justify-between items-center mb-2">
-                <span class="text-sm text-gray-400">Min Stake:</span>
-                <span class="font-medium">${option.minStake}</span>
+                <span class="text-xs sm:text-sm text-gray-400">Min Stake:</span>
+                <span class="font-medium calculator-font text-sm sm:text-base">${option.minStake}</span>
               </div>
               <div class="flex justify-between items-center mb-4">
-                <span class="text-sm text-gray-400">Lockup Period:</span>
-                <span class="font-medium">${option.lockup}</span>
+                <span class="text-xs sm:text-sm text-gray-400">Lockup Period:</span>
+                <span class="font-medium text-sm sm:text-base">${option.lockup}</span>
               </div>
-              <button class="btn-primary w-full py-2 rounded-lg font-semibold">Stake Now</button>
+              <button class="btn-primary w-full py-2 rounded-lg font-semibold text-sm sm:text-base">Stake Now</button>
             </div>
           `;
         });
@@ -1789,6 +2241,7 @@
         profileSettingsForm.addEventListener('submit', async (e) => {
           e.preventDefault();
           const displayName = document.getElementById('settings-name').value;
+
           try {
             if (currentUser) {
               await firebaseUpdateProfile(currentUser, { displayName });
@@ -1805,15 +2258,14 @@
       }
     }
 
-
     // Helper functions for icons and colors
     function getTransactionIcon(type) {
       const icons = {
-        send: '<svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>',
-        receive: '<svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8l-8-8-8 8"></path></svg>',
-        buy: '<svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>',
-        swap: '<svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>',
-        stake: '<svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path></svg>'
+        send: '<svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>',
+        receive: '<svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8l-8-8-8 8"></path></svg>',
+        buy: '<svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>',
+        swap: '<svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>',
+        stake: '<svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path></svg>'
       };
       return icons[type] || icons.send;
     }
@@ -1833,13 +2285,11 @@
     function setupEventListeners() {
       // Theme toggle
       document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
-      // Mobile menu toggle via header click
-      document.getElementById('mobile-header-toggle').addEventListener('click', () => {
-        if (window.innerWidth < 1024) { // Only toggle on mobile
-          toggleMobileMenu();
-        }
-      });
+
+      // Mobile menu toggle
+      document.getElementById('mobile-menu-btn').addEventListener('click', toggleMobileMenu);
       document.getElementById('mobile-overlay').addEventListener('click', closeMobileMenu);
+
       // Logout
       document.getElementById('logout-btn').addEventListener('click', handleLogout);
 
@@ -1864,7 +2314,7 @@
           const targetSection = item.getAttribute('data-section');
 
           // Update active nav item
-          navItems.forEach(nav => nav.classList.remove('active'));
+          document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
           item.classList.add('active');
 
           // Show target section
@@ -1878,11 +2328,11 @@
 
       // Set initial active section based on URL hash or default to dashboard
       const initialSection = window.location.hash.substring(1) || 'dashboard';
-      const initialNavItem = document.querySelector(`.nav-item[data-section="${initialSection}"]`);
+      const initialNavItem = document.querySelector(`[data-section="${initialSection}"]`);
       if (initialNavItem) {
         initialNavItem.click(); // Simulate click to activate and show section
       } else {
-        document.querySelector('.nav-item[data-section="dashboard"]').click();
+        document.querySelector('[data-section="dashboard"]').click();
       }
     }
 
@@ -1906,8 +2356,24 @@
         });
       });
 
-      // Setup receive modal specific logic
+      // Setup specific modal logic
+      setupSendModal();
       setupReceiveModal();
+    }
+
+    // Setup send modal
+    function setupSendModal() {
+      const sendAssetSelect = document.getElementById('send-asset');
+      const sendCryptoLogo = document.getElementById('send-crypto-logo');
+
+      function updateSendModalImage() {
+        const selectedAsset = sendAssetSelect.value;
+        sendCryptoLogo.src = cryptoImagePaths[selectedAsset] || cryptoImagePaths.default;
+      }
+
+      sendAssetSelect.addEventListener('change', updateSendModalImage);
+      // Initialize with default image
+      updateSendModalImage();
     }
 
     // Setup receive modal
@@ -1917,11 +2383,15 @@
       const receiveQR = document.getElementById('receive-qr');
       const copyAddressBtn = document.getElementById('copy-address');
       const shareAddressBtn = document.getElementById('share-address');
+      const receiveCryptoLogo = document.getElementById('receive-crypto-logo');
 
       function updateReceiveAddress() {
         const selectedAsset = receiveAsset.value;
         const address = walletAddresses[selectedAsset] || walletAddresses.btc;
+        const logoUrl = cryptoImagePaths[selectedAsset] || cryptoImagePaths.default;
+
         receiveAddress.textContent = address;
+        receiveCryptoLogo.src = logoUrl;
 
         // Generate QR code
         QRCode.toCanvas(receiveQR, address, {
@@ -1935,11 +2405,13 @@
       }
 
       receiveAsset.addEventListener('change', updateReceiveAddress);
+
       copyAddressBtn.addEventListener('click', () => {
         navigator.clipboard.writeText(receiveAddress.textContent).then(() => {
           showToast('Address copied to clipboard!', 'success');
         });
       });
+
       shareAddressBtn.addEventListener('click', () => {
         if (navigator.share) {
           navigator.share({
@@ -1953,7 +2425,7 @@
         }
       });
 
-      // Initialize with default address
+      // Initialize with default address and image
       updateReceiveAddress();
     }
 
@@ -1964,6 +2436,7 @@
         if (portfolioChartInstance) {
           portfolioChartInstance.destroy(); // Destroy existing chart instance
         }
+
         portfolioChartInstance = new Chart(ctx, {
           type: 'line',
           data: {
@@ -2032,26 +2505,26 @@
         const statusClass = `status-${tx.status}`;
         const typeIcon = getTransactionIcon(tx.type);
         const typeColor = getTransactionColor(tx.type);
+
         transactionHistory.innerHTML += `
-          <div class="transaction-item flex items-center justify-between p-4 glass-effect rounded-xl">
+          <div class="transaction-item flex items-center justify-between p-3 sm:p-4 glass-effect rounded-xl">
             <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 rounded-full flex items-center justify-center ${typeColor}">
+              <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center ${typeColor}">
                 ${typeIcon}
               </div>
               <div>
-                <div class="font-medium capitalize">${tx.type} ${tx.asset}</div>
-                <div class="text-sm text-gray-400">${tx.time}</div>
+                <div class="font-medium capitalize text-sm sm:text-base">${tx.type} ${tx.asset}</div>
+                <div class="text-xs sm:text-sm text-gray-400">${tx.time}</div>
               </div>
             </div>
             <div class="text-right">
-              <div class="font-medium">${tx.type === 'send' ? '-' : '+'}${tx.amount} ${tx.asset}</div>
-              <div class="text-sm ${statusClass} px-2 py-1 rounded-full">${tx.status}</div>
+              <div class="font-medium calculator-font text-sm sm:text-base">${tx.type === 'send' ? '-' : '+'}${tx.amount} ${tx.asset}</div>
+              <div class="text-xs sm:text-sm ${statusClass} px-2 py-1 rounded-full">${tx.status}</div>
             </div>
           </div>
         `;
       });
     }
-
 
     // Utility functions
     function showModal(modalId) {
@@ -2081,14 +2554,14 @@
     function toggleMobileMenu() {
       const sidebar = document.getElementById('sidebar');
       const overlay = document.getElementById('mobile-overlay');
-      sidebar.classList.toggle('sidebar-collapsed');
+      sidebar.classList.toggle('sidebar-open');
       overlay.classList.toggle('active');
     }
 
     function closeMobileMenu() {
       const sidebar = document.getElementById('sidebar');
       const overlay = document.getElementById('mobile-overlay');
-      sidebar.classList.add('sidebar-collapsed');
+      sidebar.classList.remove('sidebar-open');
       overlay.classList.remove('active');
     }
 
@@ -2127,12 +2600,6 @@
         localStorage.removeItem('safvacut_auth_time');
         if (window.location.pathname !== '/auth.html') {
           window.location.href = 'auth.html';
-        }
-      } else {
-        // If user is authenticated, ensure sidebar is not collapsed on desktop
-        const sidebar = document.getElementById('sidebar');
-        if (sidebar && window.innerWidth >= 1024) { // Only for desktop
-          sidebar.classList.remove('sidebar-collapsed');
         }
       }
     });
